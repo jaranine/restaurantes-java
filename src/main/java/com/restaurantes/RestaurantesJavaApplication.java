@@ -7,7 +7,9 @@ import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // Una clase con @Entity equivale a una tabla de base de datos
 // Un objeto equivale a una fila en una tabla de base de datos
@@ -57,6 +59,56 @@ public class RestaurantesJavaApplication {
         for (Empleado empleado : empleados) {
             System.out.println(empleado);
         }
+
+        Restaurante r1 = new Restaurante(10.0, "R1", 5);
+        Restaurante r2 = new Restaurante(15.0, "R2", 7);
+
+        // Opción clásica
+        List<Restaurante> sitiosParaComer = new ArrayList<>();
+        List<String> alumnos = new ArrayList<>();
+        List<Double> precios = new ArrayList<>();
+
+        // Opción moderna
+        List<Restaurante> sitiosGuaposParaComer = List.of(r1, r2);
+        restauranteRepository.saveAll(sitiosGuaposParaComer);
+
+        // count() para contar cuantas filas hay en la tabla
+        long numeroRestaurantes = restauranteRepository.count();
+        if (numeroRestaurantes > 0) {
+            System.out.println("Hay para comer, tenemos " + numeroRestaurantes + " restaurantes");
+        } else {
+            System.out.println("No hay para comer");
+        }
+
+        // existById boolean
+        long id = 1;
+        boolean existe = restauranteRepository.existsById(id);
+        if (existe) {
+            System.out.println("Restaurante 1 sí existe");
+        } else {
+            System.out.println("Restaurante 1 no existe");
+        }
+        // restauranteRepository.deleteById(1L);
+
+        // deleteAll borrar todas las filas de la tabla
+        // restauranteRepository.deleteAll();
+
+        // deleteById borrar una fila indicando si id
+        // restauranteRepository.deleteById(restaurante2.getId());
+        restauranteRepository.deleteById(1L);
+
+        // delete borrar pasando el objeto
+        restauranteRepository.delete(r2);
+
+        // findById traer restaurante/empleado
+        Long idABuscar = 2L;
+        Optional<Restaurante> restauranteFromDatabase = restauranteRepository.findById(idABuscar);
+        if (restauranteFromDatabase.isPresent()) {
+            Restaurante restauranteX = restauranteFromDatabase.get();
+            System.out.println(restauranteX);
+        }
+
+
     }
 
 }
