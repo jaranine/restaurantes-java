@@ -1,6 +1,9 @@
 package com.restaurantes.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Restaurantes")
@@ -18,6 +21,14 @@ public class Restaurante {
     private Boolean active = true;
 
     private Integer numeroEmpleados;
+
+    // Fecha de apertura
+    @CreationTimestamp
+    private LocalDate starDate = LocalDate.now(); // valor por defecto a fecha actual
+
+    // Tipo de comida
+    @Enumerated(EnumType.STRING)
+    private TipoComida tipoComida = TipoComida.SPANISH;
 
     // metodo constructor para crear Restaurantes con valores
     public Restaurante(Double precioMedio, String nombre, Integer numeroEmpleados) {
@@ -69,6 +80,14 @@ public class Restaurante {
         this.numeroEmpleados = numeroEmpleados;
     }
 
+    public TipoComida getTipoComida() {
+        return tipoComida;
+    }
+
+    public void setTipoComida(TipoComida tipoComida) {
+        this.tipoComida = tipoComida;
+    }
+
     // toString
 
     @Override
@@ -79,6 +98,16 @@ public class Restaurante {
                 ", precioMedio=" + precioMedio +
                 ", active=" + active +
                 ", numeroEmpleados=" + numeroEmpleados +
+                ", starDate=" + starDate +
+                ", tipoComida=" + tipoComida +
                 '}';
+    }
+
+    public LocalDate getStarDate() {
+        return starDate;
+    }
+
+    public void setStarDate(LocalDate starDate) {
+        this.starDate = starDate;
     }
 }
