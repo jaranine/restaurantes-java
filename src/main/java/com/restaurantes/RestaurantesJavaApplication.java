@@ -157,6 +157,24 @@ public class RestaurantesJavaApplication {
         System.out.println(hamburguesero1);
         System.out.println(hamburguesero2);
 
+        // Bucle for para iterar sobre todos los empleados imprimiendo el nombre del empleado
+        // y el nombre del restaurante si lo tiene
+        for (Empleado empleado : empleadoRepository.findAll()) {
+            System.out.println("Empleado: " + empleado.getNombre());
+            if (empleado.getRestaurante() != null) {
+                System.out.println("Trabaja en el restaurante: " + empleado.getRestaurante().getNombre());
+            } else {
+                System.out.println("No tiene restaurante asignado");
+            }
+        }
+
+        //for (Empleado empleado : empleadoRepository.findAll()) {
+        //    System.out.println(
+        //            empleado.getNombre() + " trabaja en " +
+        //            (empleado.getRestaurante() != null ? empleado.getRestaurante().getNombre() : "ningún sitio")
+        //    );
+        //}
+
     }
 
 }
