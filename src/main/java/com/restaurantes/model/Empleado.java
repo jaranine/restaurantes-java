@@ -14,6 +14,9 @@ public class Empleado {
     private String dni;
     private Integer edad;
 
+    @ManyToOne
+    private Restaurante restaurante;
+
     public Empleado(Integer edad, String dni, String apellido, String nombre, Long id) {
         this.edad = edad;
         this.dni = dni;
@@ -64,6 +67,14 @@ public class Empleado {
         this.edad = edad;
     }
 
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
+
     // toString
 
     @Override
@@ -74,6 +85,7 @@ public class Empleado {
                 ", apellido='" + apellido + '\'' +
                 ", dni='" + dni + '\'' +
                 ", edad=" + edad +
+                ", restaurante=" + restaurante.getId() +
                 '}';
     }
 }
