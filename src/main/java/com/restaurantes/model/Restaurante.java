@@ -28,7 +28,7 @@ public class Restaurante {
 
     // Tipo de comida
     @Enumerated(EnumType.STRING)
-    private TipoComida tipoComida = TipoComida.SPANISH;
+    private TipoComida tipoComida = TipoComida.ESP;
 
     // metodo constructor para crear Restaurantes con valores
     public Restaurante(Double precioMedio, String nombre, Integer numeroEmpleados) {
