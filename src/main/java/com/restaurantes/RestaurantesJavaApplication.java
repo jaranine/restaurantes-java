@@ -175,6 +175,10 @@ public class RestaurantesJavaApplication {
         //    );
         //}
 
+        // Probar a filtrar
+        List<Empleado> empleadosHambAst = empleadoRepository.findByRestaurante_Nombre("Hamburguesería Asturiana");
+        System.out.println(empleadosHambAst);
+
     }
 
 }
