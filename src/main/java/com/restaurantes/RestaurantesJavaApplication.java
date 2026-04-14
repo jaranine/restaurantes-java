@@ -2,6 +2,7 @@ package com.restaurantes;
 
 import com.restaurantes.model.Empleado;
 import com.restaurantes.model.Restaurante;
+import com.restaurantes.model.TipoComida;
 import com.restaurantes.repository.EmpleadoRepository;
 import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.boot.SpringApplication;
@@ -108,6 +109,23 @@ public class RestaurantesJavaApplication {
             System.out.println(restauranteX);
         }
 
+
+        // Crear un restaurante español
+        Restaurante restEspanol = new Restaurante(20.0, "Casa Pepe", 15);
+        // restEspanol.setTipoComida("Español");
+        restEspanol.setTipoComida(TipoComida.ESP);
+        restauranteRepository.save(restEspanol);
+        System.out.println(restEspanol);
+
+        // Crear un restaurante japonés
+        Restaurante restJapones = new Restaurante();
+        restJapones.setTipoComida(TipoComida.JAP);
+        restauranteRepository.save(restJapones);
+        System.out.println(restJapones);
+
+        // Probar a intentar otro tipo de comida y ver que no se puede guardar en base de datos
+
+        // Probar fecha de startDate del restaurante
 
     }
 
