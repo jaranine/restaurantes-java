@@ -23,7 +23,7 @@ public class Restaurante {
     private Integer numeroEmpleados;
 
     // Fecha de apertura
-    @CreationTimestamp
+    // @CreationTimestamp // generación automatica de fecha
     private LocalDate starDate = LocalDate.now(); // valor por defecto a fecha actual
 
     // Tipo de comida
