@@ -88,6 +88,14 @@ public class Restaurante {
         this.tipoComida = tipoComida;
     }
 
+    public LocalDate getStarDate() {
+        return starDate;
+    }
+
+    public void setStarDate(LocalDate starDate) {
+        this.starDate = starDate;
+    }
+
     // toString
 
     @Override
@@ -103,11 +111,4 @@ public class Restaurante {
                 '}';
     }
 
-    public LocalDate getStarDate() {
-        return starDate;
-    }
-
-    public void setStarDate(LocalDate starDate) {
-        this.starDate = starDate;
-    }
 }
