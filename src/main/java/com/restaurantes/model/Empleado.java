@@ -85,7 +85,7 @@ public class Empleado {
                 ", apellido='" + apellido + '\'' +
                 ", dni='" + dni + '\'' +
                 ", edad=" + edad +
-                ", restaurante=" + (restaurante.getId() != null ? restaurante.getId() : null) +
+                ", restaurante=" + (restaurante != null ? restaurante.getId() : null) +
                 '}';
     }
 }

@@ -154,6 +154,8 @@ public class RestaurantesJavaApplication {
         hamburguesero2.setRestaurante(hamburgueseriaAsturiana);
         empleadoRepository.save(hamburguesero1);
         empleadoRepository.save(hamburguesero2);
+        System.out.println(hamburguesero1);
+        System.out.println(hamburguesero2);
 
     }
 
