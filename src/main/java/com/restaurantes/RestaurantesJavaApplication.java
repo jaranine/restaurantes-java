@@ -142,6 +142,19 @@ public class RestaurantesJavaApplication {
         restauranteRepository.save(sidreria);
         System.out.println(sidreria);
 
+        // ManyToOne - asociar un restaurante a dos empleados
+        // Paso 1. crear un restaurante y guardarlo
+        Restaurante hamburgueseriaAsturiana = new Restaurante(15.0, "Hamburguesería Asturiana", 5);
+        restauranteRepository.save(hamburgueseriaAsturiana);
+
+        // Paso 2. crear empleados, setRestaurante y guardar
+        Empleado hamburguesero1 = new Empleado(30, "87654321B", "Pepez", "Pepe", null);
+        Empleado hamburguesero2 = new Empleado(45, "12344321C", "Fernandez", "Fernando", null);
+        hamburguesero1.setRestaurante(hamburgueseriaAsturiana);
+        hamburguesero2.setRestaurante(hamburgueseriaAsturiana);
+        empleadoRepository.save(hamburguesero1);
+        empleadoRepository.save(hamburguesero2);
+
     }
 
 }
