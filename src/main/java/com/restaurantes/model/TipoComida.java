@@ -1,5 +1,5 @@
 package com.restaurantes.model;
 
 public enum TipoComida {
-    SPANISH, JAPANESE
+    ESP, JAP, ITA, MEX, AME, OTRO
 }
