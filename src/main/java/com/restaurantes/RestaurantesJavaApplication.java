@@ -8,6 +8,7 @@ import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -124,8 +125,22 @@ public class RestaurantesJavaApplication {
         System.out.println(restJapones);
 
         // Probar a intentar otro tipo de comida y ver que no se puede guardar en base de datos
+        //Restaurante restIndio = new Restaurante();
+        //restIndio.setTipoComida(TipoComida.IND);
 
         // Probar fecha de startDate del restaurante
+        Restaurante restAsturiano = new Restaurante();
+        restAsturiano.setNombre("Cachopos");
+        restAsturiano.setStarDate(LocalDate.now()); // fecha actual
+        restauranteRepository.save(restAsturiano);
+        System.out.println(restAsturiano);
+
+        // Fecha futura
+        Restaurante sidreria = new Restaurante();
+        sidreria.setNombre("Sidrería");
+        sidreria.setStarDate(LocalDate.of(2026, 6, 25));
+        restauranteRepository.save(sidreria);
+        System.out.println(sidreria);
 
     }
 
