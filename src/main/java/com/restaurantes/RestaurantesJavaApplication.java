@@ -180,6 +180,7 @@ public class RestaurantesJavaApplication {
         List<Empleado> empleadosHambAst = empleadoRepository.findByRestaurante_Nombre("Hamburguesería Asturiana");
         List<Empleado> empleadosMayor20 = empleadoRepository.findByEdadGreaterThanEqual(20);
         List<Empleado> empleadosComidaEsp = empleadoRepository.findByRestaurante_TipoComida(TipoComida.ESP);
+        List<Empleado> empleadosApellido = empleadoRepository.descOrderByApellido();
 
         System.out.println("EMPLEADOS HAMBURGUESERÍA ASTURIANA");
         for (Empleado empleado : empleadosHambAst) {
@@ -191,6 +192,10 @@ public class RestaurantesJavaApplication {
         }
         System.out.println("EMPLEADOS DE RESTAURANTES DE COMIDA ESPAÑOLA");
         for (Empleado empleado : empleadosComidaEsp) {
+            System.out.println(empleado);
+        }
+        System.out.println("EMPLEADOS ORDENADOS POR APELLIDO DESCENDENTE");
+        for (Empleado empleado : empleadosApellido) {
             System.out.println(empleado);
         }
 
