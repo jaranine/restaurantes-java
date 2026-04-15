@@ -1,9 +1,8 @@
 package com.restaurantes;
 
-import com.restaurantes.model.Empleado;
-import com.restaurantes.model.Restaurante;
-import com.restaurantes.model.TipoComida;
+import com.restaurantes.model.*;
 import com.restaurantes.repository.EmpleadoRepository;
+import com.restaurantes.repository.PlatoRepository;
 import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -197,6 +196,40 @@ public class RestaurantesJavaApplication {
         System.out.println("EMPLEADOS ORDENADOS POR APELLIDO DESCENDENTE");
         for (Empleado empleado : empleadosApellido) {
             System.out.println(empleado);
+        }
+
+        // Clases con la clase Plato
+        PlatoRepository platoRepository = context.getBean(PlatoRepository.class);
+
+        Plato cachopo = new Plato();
+        cachopo.setNombre("Cachopo Asturiano");
+        cachopo.setDescripcion("Cachopo con jamón y queso");
+        cachopo.setPrecio(15.0);
+        cachopo.setTipoPlato(TipoPlato.PRIMER_PLATO);
+        cachopo.setRestaurante(restAsturiano);
+        platoRepository.save(cachopo);
+
+        Plato fabada = new Plato();
+        fabada.setNombre("Fabada Asturiana");
+        fabada.setDescripcion("Fabada asturiana con chorizo y morcilla");
+        fabada.setPrecio(12.0);
+        fabada.setTipoPlato(TipoPlato.PRIMER_PLATO);
+        fabada.setRestaurante(restAsturiano);
+        platoRepository.save(fabada);
+
+        Plato casadielles = new Plato();
+        casadielles.setNombre("Casadielles");
+        casadielles.setDescripcion("Casadielles asturianas con nueces y azúcar");
+        casadielles.setPrecio(8.0);
+        casadielles.setTipoPlato(TipoPlato.POSTRE);
+        casadielles.setRestaurante(restAsturiano);
+        platoRepository.save(casadielles);
+
+        List<Plato> platoTipo = platoRepository.findByTipoPlato(TipoPlato.PRIMER_PLATO);
+
+        System.out.println("PLATOS PRINCIPALES DE LA CARTA");
+        for (Plato plato : platoTipo) {
+            System.out.println(plato);
         }
 
     }
