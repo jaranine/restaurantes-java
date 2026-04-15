@@ -176,8 +176,23 @@ public class RestaurantesJavaApplication {
         //}
 
         // Probar a filtrar
+        System.out.println("PRUEBAS DE FILTROS");
         List<Empleado> empleadosHambAst = empleadoRepository.findByRestaurante_Nombre("Hamburguesería Asturiana");
-        System.out.println(empleadosHambAst);
+        List<Empleado> empleadosMayor20 = empleadoRepository.findByEdadGreaterThanEqual(20);
+        List<Empleado> empleadosComidaEsp = empleadoRepository.findByRestaurante_TipoComida(TipoComida.ESP);
+
+        System.out.println("EMPLEADOS HAMBURGUESERÍA ASTURIANA");
+        for (Empleado empleado : empleadosHambAst) {
+            System.out.println(empleado);
+        }
+        System.out.println("EMPLEADOS MAYORES DE 20 AÑOS");
+        for (Empleado empleado : empleadosMayor20) {
+            System.out.println(empleado);
+        }
+        System.out.println("EMPLEADOS DE RESTAURANTES DE COMIDA ESPAÑOLA");
+        for (Empleado empleado : empleadosComidaEsp) {
+            System.out.println(empleado);
+        }
 
     }
 
