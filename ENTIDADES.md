@@ -13,7 +13,7 @@
   * String apellido
   * String dni
   * Integer age
-  * Restaurant restaurant (ManyToOne) (NUEVO)
+  * Restaurant restaurant (ManyToOne)
 
 * TipoComida (enum)
   * ITALIANA
@@ -22,8 +22,14 @@
   * AMERICANA
   * JAPONESA
 
-* Proximamente
-  * Plato
+* Plato
+  * Long id
+  * String nombre
+  * String descripcion
+  * Double precio
+  * TipoPlato tipo (enum: STARTER, MAIN_COURSE, DESSERT)
+  * Asociación:
+    * Restaurante restaurante (ManyToOne)
 
 * Order (pedido)
   * fecha
