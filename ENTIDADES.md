@@ -1,10 +1,10 @@
-* Restaurant
+* Restaurante
   * Long id
   * String nombre
   * Double precioMedio
-  * Boolean active
-  * TipoComida categoría (enum)
-  * LocalDate starDate
+  * Boolean activo
+  * TipoComida tipoComida (enum: ITALIANA, ESPAÑOLA, MEXICANA, AMERICANA, JAPONESA)
+  * LocalDate fechaInicio
   * Integer numeroEmpleados
 
 * Empleado
@@ -12,42 +12,42 @@
   * String nombre
   * String apellido
   * String dni
-  * Integer age
-  * Restaurant restaurant (ManyToOne)
-
-* TipoComida (enum)
-  * ITALIANA
-  * ESPAÑOLA
-  * MEXICANA
-  * AMERICANA
-  * JAPONESA
+  * Integer edad
+  * Restaurante restaurante (ManyToOne)
 
 * Plato
   * Long id
   * String nombre
   * String descripcion
   * Double precio
-  * TipoPlato tipo (enum: STARTER, MAIN_COURSE, DESSERT)
+  * TipoPlato tipoPlato (enum: ENTRANTES, PRIMER_PLATO, POSTRE)
+  * Alergeno alergeno (enum: GLUTEN, LACTEOS, FRUTOS_SECOS, MARISCO, HUEVO, SOJA)
   * Asociación:
     * Restaurante restaurante (ManyToOne)
 
-* Order (pedido)
-  * fecha
-  * precioTotal
-  * numeroComensales
-  * tip comida
-  * estado (enum: PENDIENTE, EN_PREPARACION, SERVIDO, CANCELADO)
-  * tipo: enum (a domicilio, para llevar, en restaurante)
+* Pedido
+  * Long id
+  * LocalDateTime fecha
+  * Integer numeroMesa
+  * Integer numeroComensales
+  * Double precioTotal
+  * Double propina
+  * EstadoPedido estadoPedido (enum: PENDIENTE, EN_PREPARACION, SERVIDO, CANCELADO)
   * asociaciones:
-    * user (ManyToOne)
-    * Restaurante (ManyToOne)
-    * List<plato> platos (ManyToMany)
+    * Restaurante restaurante (ManyToOne)
 
-* Review
+* LineaPedido
+  * Long Id
+  * Integer cantidad
+  * asociaciones:
+    * Plato plato (ManyToOne)
+    * Precio precio (ManyToOne)
+
+* Resena
   * Long id
   * String comentario
   * Integer puntuacion
   * LocalDate fecha
   * asociaciones:
-    * user (ManyToOne)
-    * Restaurante (ManyToOne)
+    * Usuario usuario (ManyToOne)
+    * Restaurante restaurante (ManyToOne)

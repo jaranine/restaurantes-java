@@ -18,13 +18,13 @@ public class Restaurante {
     private Double precioMedio;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT true") // Valor por defecto
-    private Boolean active = true;
+    private Boolean activo = true;
 
     private Integer numeroEmpleados;
 
     // Fecha de apertura
     // @CreationTimestamp // generación automatica de fecha
-    private LocalDate starDate = LocalDate.now(); // valor por defecto a fecha actual
+    private LocalDate fechaInicio = LocalDate.now(); // valor por defecto a fecha actual
 
     // Tipo de comida
     @Enumerated(EnumType.STRING)
@@ -64,12 +64,12 @@ public class Restaurante {
         this.precioMedio = precioMedio;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     public Integer getNumeroEmpleados() {
@@ -88,12 +88,12 @@ public class Restaurante {
         this.tipoComida = tipoComida;
     }
 
-    public LocalDate getStarDate() {
-        return starDate;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setStarDate(LocalDate starDate) {
-        this.starDate = starDate;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
     // toString
@@ -104,9 +104,9 @@ public class Restaurante {
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", precioMedio=" + precioMedio +
-                ", active=" + active +
+                ", activo=" + activo +
                 ", numeroEmpleados=" + numeroEmpleados +
-                ", starDate=" + starDate +
+                ", fechaInicio=" + fechaInicio +
                 ", tipoComida=" + tipoComida +
                 '}';
     }

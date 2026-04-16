@@ -130,14 +130,14 @@ public class RestaurantesJavaApplication {
         // Probar fecha de startDate del restaurante
         Restaurante restAsturiano = new Restaurante();
         restAsturiano.setNombre("Cachopos");
-        restAsturiano.setStarDate(LocalDate.now()); // fecha actual
+        restAsturiano.setFechaInicio(LocalDate.now()); // fecha actual
         restauranteRepository.save(restAsturiano);
         System.out.println(restAsturiano);
 
         // Fecha futura
         Restaurante sidreria = new Restaurante();
         sidreria.setNombre("Sidrería");
-        sidreria.setStarDate(LocalDate.of(2026, 6, 25));
+        sidreria.setFechaInicio(LocalDate.of(2026, 6, 25));
         restauranteRepository.save(sidreria);
         System.out.println(sidreria);
 
@@ -263,6 +263,7 @@ public class RestaurantesJavaApplication {
         }
 
         // Opción 2: crear un pedido
+
 
     }
 

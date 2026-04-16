@@ -26,8 +26,7 @@ public class Plato {
     @Enumerated(EnumType.STRING)
     private Alergeno alergeno = Alergeno.SIN_ALERGENOS;
 
-    public Plato(Long id, String nombre, String descripcion, Double precio, TipoPlato tipoPlato, Restaurante restaurante, Alergeno alergeno) {
-        this.id = id;
+    public Plato(String nombre, String descripcion, Double precio, TipoPlato tipoPlato, Restaurante restaurante, Alergeno alergeno) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
