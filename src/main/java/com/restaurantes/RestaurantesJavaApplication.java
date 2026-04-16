@@ -271,6 +271,18 @@ public class RestaurantesJavaApplication {
         pedido1.setRestaurante(restAsturiano);
         pedidoRepository.save(pedido1);
 
+        // Crear 6 líneas de pedido, una para cada pedido
+        LineaPedidoRepository lineaPedidoRepository = context.getBean(LineaPedidoRepository.class);
+
+        LineaPedido unCachopo =  new LineaPedido(pedido1, cachopo, 1);
+        LineaPedido dosFabadas =  new LineaPedido(pedido1, fabada, 2);
+        LineaPedido dosCasadielles =  new LineaPedido(pedido1, casadielles, 2);
+        lineaPedidoRepository.saveAll(List.of(unCachopo, dosFabadas, dosCasadielles));
+
+        // Calcular precio total en Java
+
+        // Calcular precio total directamente en base de datos con una Query
+
     }
 
 }
