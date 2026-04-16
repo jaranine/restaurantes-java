@@ -41,7 +41,7 @@
   * Integer cantidad
   * asociaciones:
     * Plato plato (ManyToOne)
-    * Precio precio (ManyToOne)
+    * Pedido pedido (ManyToOne)
 
 * Resena
   * Long id
