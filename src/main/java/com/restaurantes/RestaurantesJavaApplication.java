@@ -2,6 +2,7 @@ package com.restaurantes;
 
 import com.restaurantes.model.*;
 import com.restaurantes.repository.EmpleadoRepository;
+import com.restaurantes.repository.PedidoRepository;
 import com.restaurantes.repository.PlatoRepository;
 import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.boot.SpringApplication;
@@ -263,7 +264,14 @@ public class RestaurantesJavaApplication {
         }
 
         // Opción 2: crear un pedido
+        PedidoRepository pedidoRepository = context.getBean(PedidoRepository.class);
 
+        Pedido pedido1 = new Pedido();
+        pedido1.setNumeroComensales(2);
+        pedido1.setNumeroMesa(5);
+        pedido1.setPropina(5.0);
+        pedido1.setRestaurante(restAsturiano);
+        pedidoRepository.save(pedido1);
 
     }
 

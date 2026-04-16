@@ -19,7 +19,7 @@ public class Pedido {
     private Double propina;
 
     @Enumerated(EnumType.STRING)
-    private EstadoPedido estadoPedido;
+    private EstadoPedido estadoPedido = EstadoPedido.PENDIENTE;
 
     @ManyToOne
     private Restaurante restaurante;
