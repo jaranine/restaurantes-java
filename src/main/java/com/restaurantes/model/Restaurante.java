@@ -1,7 +1,7 @@
 package com.restaurantes.model;
 
+import com.restaurantes.model.enums.TipoComida;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 

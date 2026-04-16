@@ -1,10 +1,8 @@
 package com.restaurantes;
 
 import com.restaurantes.model.*;
-import com.restaurantes.repository.EmpleadoRepository;
-import com.restaurantes.repository.PedidoRepository;
-import com.restaurantes.repository.PlatoRepository;
-import com.restaurantes.repository.RestauranteRepository;
+import com.restaurantes.model.enums.*;
+import com.restaurantes.repository.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

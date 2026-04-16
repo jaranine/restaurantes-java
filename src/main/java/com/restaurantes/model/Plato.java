@@ -1,5 +1,7 @@
 package com.restaurantes.model;
 
+import com.restaurantes.model.enums.Alergeno;
+import com.restaurantes.model.enums.TipoPlato;
 import jakarta.persistence.*;
 
 @Entity

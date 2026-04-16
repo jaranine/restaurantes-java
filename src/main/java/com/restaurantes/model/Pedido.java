@@ -1,5 +1,6 @@
 package com.restaurantes.model;
 
+import com.restaurantes.model.enums.EstadoPedido;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
