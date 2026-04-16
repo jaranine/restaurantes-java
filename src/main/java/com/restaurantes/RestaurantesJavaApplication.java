@@ -277,9 +277,20 @@ public class RestaurantesJavaApplication {
         LineaPedido unCachopo =  new LineaPedido(pedido1, cachopo, 1);
         LineaPedido dosFabadas =  new LineaPedido(pedido1, fabada, 2);
         LineaPedido dosCasadielles =  new LineaPedido(pedido1, casadielles, 2);
-        lineaPedidoRepository.saveAll(List.of(unCachopo, dosFabadas, dosCasadielles));
+
+        List<LineaPedido> lineasPedido = lineaPedidoRepository.saveAll(List.of(unCachopo, dosFabadas, dosCasadielles));
 
         // Calcular precio total en Java
+        double precioTotal = 0.0;
+        for (LineaPedido lineaPedido : lineasPedido) {
+            double precioLinea = lineaPedido.getPlato().getPrecio() * lineaPedido.getCantidad();
+            //precioTotal = precioTotal + precioLinea;
+            precioTotal += precioLinea;
+        }
+
+        // Guardar el precioTotal en base de datos
+        pedido1.setPrecioTotal(precioTotal);
+        pedidoRepository.save(pedido1);
 
         // Calcular precio total directamente en base de datos con una Query
 
