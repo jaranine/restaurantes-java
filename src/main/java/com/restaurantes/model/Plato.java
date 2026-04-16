@@ -23,14 +23,19 @@ public class Plato {
     @ManyToOne
     private Restaurante restaurante;
 
-    public Plato(Long id, String nombre, String descripcion, Double precio, TipoPlato tipoPlato, Restaurante restaurante) {
+    @Enumerated(EnumType.STRING)
+    private Alergeno alergeno = Alergeno.SIN_ALERGENOS;
+
+    public Plato(Long id, String nombre, String descripcion, Double precio, TipoPlato tipoPlato, Restaurante restaurante, Alergeno alergeno) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.tipoPlato = tipoPlato;
         this.restaurante = restaurante;
+        this.alergeno = alergeno;
     }
+
     public Plato() {};
 
     public Long getId() {
@@ -81,6 +86,14 @@ public class Plato {
         this.restaurante = restaurante;
     }
 
+    public Alergeno getAlergeno() {
+        return alergeno;
+    }
+
+    public void setAlergeno(Alergeno alergeno) {
+        this.alergeno = alergeno;
+    }
+
     @Override
     public String toString() {
         return "Plato{" +
@@ -90,6 +103,7 @@ public class Plato {
                 ", precio=" + precio +
                 ", tipoPlato=" + tipoPlato +
                 ", restaurante=" + restaurante +
+                ", alergeno=" + alergeno +
                 '}';
     }
 }
