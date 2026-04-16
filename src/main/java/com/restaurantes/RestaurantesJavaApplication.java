@@ -179,7 +179,7 @@ public class RestaurantesJavaApplication {
         List<Empleado> empleadosHambAst = empleadoRepository.findByRestaurante_Nombre("Hamburguesería Asturiana");
         List<Empleado> empleadosMayor20 = empleadoRepository.findByEdadGreaterThanEqual(20);
         List<Empleado> empleadosComidaEsp = empleadoRepository.findByRestaurante_TipoComida(TipoComida.ESP);
-        List<Empleado> empleadosApellido = empleadoRepository.descOrderByApellido();
+        List<Empleado> empleadosApellidoDesc = empleadoRepository.descOrderByApellido();
 
         System.out.println("EMPLEADOS HAMBURGUESERÍA ASTURIANA");
         for (Empleado empleado : empleadosHambAst) {
@@ -194,7 +194,7 @@ public class RestaurantesJavaApplication {
             System.out.println(empleado);
         }
         System.out.println("EMPLEADOS ORDENADOS POR APELLIDO DESCENDENTE");
-        for (Empleado empleado : empleadosApellido) {
+        for (Empleado empleado : empleadosApellidoDesc) {
             System.out.println(empleado);
         }
 
@@ -231,6 +231,38 @@ public class RestaurantesJavaApplication {
         for (Plato plato : platoTipo) {
             System.out.println(plato);
         }
+
+        // Opción 1: crear consultas personalizadas en PlatoRepository
+        // que traiga los platos con precio menor que 10 euros (findAllByPrecio)
+        List<Plato> platoMenor10 = platoRepository.findByPrecioLessThanEqual(10.0);
+
+        System.out.println("PLATOS CON PRECIO MENOR O IGUAL A 10 EUROS");
+        for (Plato plato : platoMenor10) {
+            System.out.println(plato);
+        }
+
+        // que traiga los platos de un restaurante ordenados por precio ascendente (findAllBy)
+        //List<Plato> platoPrecioAsc = platoRepository.ascOrderByPrecio();
+        List<Plato> platoPrecioAsc = platoRepository.findByRestauranteIdOrderByPrecio(restAsturiano.getId());
+
+        System.out.println("PLATOS ORDENADOS POR PRECIO ASCENDENTE");
+        for (Plato plato : platoPrecioAsc) {
+            System.out.println(plato);
+        }
+
+        //Long restaurantId = restAsturiano.getId();
+        //for (var plato: platoRepository.findByRestauranteIdOrderByPrecio(restaurantId))
+        //    System.out.println(plato);
+
+        // que traiga aquellos platos que no contenga alergenos
+        List<Plato> platoAlergeno = platoRepository.findByAlergenoIn(List.of(Alergeno.APIO, Alergeno.CRUSTACEOS));
+
+        System.out.println("PLATOS SIN ALERGENOS");
+        for (Plato plato : platoAlergeno) {
+            System.out.println(plato);
+        }
+
+        // Opción 2: crear un pedido
 
     }
 
