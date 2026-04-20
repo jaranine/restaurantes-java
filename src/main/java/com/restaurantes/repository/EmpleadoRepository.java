@@ -16,4 +16,10 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
     @Query("select e from Empleado e order by e.apellido DESC")
     List<Empleado> descOrderByApellido();
+
+    /*
+    Si tuviera fecha de inicio en la que empezó a trabajar podemos calcular su antiguedad
+        @Query(value = "select (current_date - e.startDate) from Employee e where e.nif = ?1")
+    Duration findWorkDaysByNif(String nif);
+     */
 }

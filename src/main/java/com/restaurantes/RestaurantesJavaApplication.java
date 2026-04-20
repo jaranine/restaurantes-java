@@ -290,9 +290,18 @@ public class RestaurantesJavaApplication {
 
         // Guardar el precioTotal en base de datos
         pedido1.setPrecioTotal(precioTotal);
+        pedido1.setEstadoPedido(EstadoPedido.SERVIDO); // marcamos el pedido como completado
         pedidoRepository.save(pedido1);
 
         // Calcular precio total directamente en base de datos con una Query
+        Double precioTotal2 = lineaPedidoRepository.calcularPrecioTotal(pedido1.getId()); // JPQL
+        /*
+        Ambos precios son el mismo
+        El primero totalPrice, se calcula desde java con un bucle for
+        El segundo totalPrice2, se calcula directamente en base de datos por lo que sería más óptimo
+         */
+        System.out.println("Precio totalPrice: " + precioTotal);
+        System.out.println("Precio totalPrice2: " + precioTotal2);
 
     }
 
