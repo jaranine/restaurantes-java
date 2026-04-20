@@ -11,7 +11,7 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    Long Id;
+    private Long id;
 
     private LocalDate fecha = LocalDate.now();
     private Integer numeroMesa;
@@ -37,11 +37,11 @@ public class Pedido {
     public Pedido() {}
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        id = id;
     }
 
     public LocalDate getFecha() {
@@ -103,7 +103,7 @@ public class Pedido {
     @Override
     public String toString() {
         return "Pedido{" +
-                "Id=" + Id +
+                "id=" + id +
                 ", fecha=" + fecha +
                 ", numeroMesa=" + numeroMesa +
                 ", numeroComensales=" + numeroComensales +

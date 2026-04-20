@@ -8,7 +8,7 @@ public class LineaPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    Long Id;
+    private Long id;
 
     private Integer cantidad;
 
@@ -26,11 +26,11 @@ public class LineaPedido {
     public LineaPedido() {}
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        id = id;
     }
 
     public Integer getCantidad() {
@@ -60,7 +60,7 @@ public class LineaPedido {
     @Override
     public String toString() {
         return "LineaPedido{" +
-                "Id=" + Id +
+                "id=" + id +
                 ", cantidad=" + cantidad +
                 ", plato=" + plato +
                 ", pedido=" + pedido +
