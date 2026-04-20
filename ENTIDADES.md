@@ -43,6 +43,25 @@
     * Plato plato (ManyToOne)
     * Pedido pedido (ManyToOne)
 
+Pasos para empezar a crear controllers:
+* Crear paquete nuevo llamado controller en com.restaurantes
+
+* HolaController (opcional)
+    * Crear una clase java nueva llamada HolaController
+    * Anotar la clase con @Controller
+    * Crear un método público llamado hola que reciba un Model y devuelva String
+    * Anotar el método con @GetMapping ("/hola")
+    * Dentro del método, guardar un mensaje en el Model con model.attribute ("message", "Hola, mundo")
+    * Devolver el nombre del template HTML que vamos a crear: "hola"
+
+* Crear una clase java nueva llamada RestauranteController
+    * Anotar clase con @Controller
+    * Crear un constructor que reciba RestauranteRepository y lo guarde en un atributo privado final
+    * Crear un método público llamado findAll que reciba un Model y devuelva String
+    * Anotar el método con @GetMapping("/restaurantes")
+    * Dentro del método, usar restauranteRepository.findAll() para obtener la lista de restaurantes y guardarla en el Model con model.addAttribute("restaurantes", restauranteRepository.findAll())
+    * Devolver el nombre del template HTML que vamos a crear: "restaurante-lista"
+
 * Resena
   * Long id
   * String comentario
