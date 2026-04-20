@@ -41,7 +41,7 @@ public class Pedido {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public LocalDate getFecha() {

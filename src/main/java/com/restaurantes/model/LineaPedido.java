@@ -13,10 +13,10 @@ public class LineaPedido {
     private Integer cantidad;
 
     @ManyToOne
-    private Plato plato;
+    private Pedido pedido;
 
     @ManyToOne
-    private Pedido pedido;
+    private Plato plato;
 
     public LineaPedido(Pedido pedido, Plato plato, Integer cantidad) {
         this.pedido = pedido;
@@ -30,7 +30,7 @@ public class LineaPedido {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public Integer getCantidad() {
