@@ -19,7 +19,12 @@
 	</div>
 </header>
 <div class="container">
-
+	<p th:text="${restaurante.nombre}"></p>
+	<p th:text="${restaurante.precioMedio != null ? restaurante.precioMedio + ' € (EUR)' : 'Sin precio'}"></p>
+	<p th:if="${restaurante.numeroEmpleados != null}" th:text="${restaurante.numeroEmpleados} + ' empleados'"></p>
+	<p th:unless="${restaurante.numeroEmpleados != null}">Sin empleados</p>
+	<p th:if="${restaurante.activo}" style="color: aquamarine">Abierto</p>
+	<p th:unless="${restaurante.activo}" style="color: brown">Cerrado</p>
 </div>
 </body>
 </html>
