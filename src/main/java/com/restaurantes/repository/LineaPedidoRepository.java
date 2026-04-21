@@ -10,8 +10,8 @@ public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> 
     ya que este OrderLine es un agregado de esa raíz que añade información extra
      */
     @Query("""
-        SELECT SUM(ol.cantidad * ol.plato.precio)
-        FROM LineaPedido ol where ol.pedido.id = ?1
+        SELECT SUM(lp.cantidad * lp.plato.precio)
+        FROM LineaPedido lp where lp.pedido.id = ?1
         """)
     Double calcularPrecioTotal(Long pedidoId);
 }
