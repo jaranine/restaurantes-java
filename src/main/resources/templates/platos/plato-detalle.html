@@ -19,17 +19,24 @@
 	</div>
 </header>
 <div class="container">
-	<h1 th:text="${titulo}">Restaurantes listado</h1>
-	<p th:text="|${#lists.size(restaurantes)} resultados|"></p>
-	<p th:text="|${restaurantes.size()} resultados|"></p>
-	<p th:text="|${numeroRestaurantes} resultados|"></p>
-	<ul class="list-group">
-		<li class="list-group-item" th:each="restaurante : ${restaurantes}">
-			<span th:text="${restaurante.nombre}"></span>
-			<span th:text="${restaurante.precioMedio}"></span>
-			<a th:href="@{/restaurantes/{id}(id=${restaurante.id})}">Ver restaurante</a>
-		</li>
-	</ul>
+	<h1 th:text="'Plato ' + ${plato.id}" class="mb-2"></h1>
+
+	<p th:text="'Nombre: ' + ${plato.nombre}"></p>
+
+	<p th:text="'Precio: ' + ${plato.precio != null ? plato.precio + ' € (EUR)' : 'Sin precio'}"></p>
+
+	<p th:text="'Descripción: ' + ${plato.descripcion != null ? plato.descripcion + ' € (EUR)' : 'Sin descripción'}"></p>
+
+	<p th:switch="${plato.tipoPlato}">
+		<span th:case="${T(com.restaurantes.model.enums.TipoPlato).ENTRANTES}">Entrantes</span>
+		<span th:case="${T(com.restaurantes.model.enums.TipoPlato).PRIMER_PLATO}">Primer plato</span>
+		<span th:case="${T(com.restaurantes.model.enums.TipoPlato).POSTRE}">Postres</span>
+		<span th:case="*">No definido</span>
+	</p>
+
+	<p th:if="${plato.restaurante != null}">
+		<a th:href="@{/restaurantes/{id}(id=${plato.restaurante.id})}" th:text="'Restaurante: ' + ${plato.restaurante.nombre}"></a>
+	</p>
 </div>
 </body>
 </html>

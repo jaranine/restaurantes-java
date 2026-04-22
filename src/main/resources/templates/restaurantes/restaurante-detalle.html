@@ -42,7 +42,9 @@
 			<div class="col" th:text="${plato.descripcion}"></div>
 			<div class="col" th:text="${plato.precio}"></div>
 			<div class="col" th:text="${plato.tipoPlato.label}"></div>
-			<div class="col"></div>
+			<div class="col">
+				<a th:href="@{/platos/{id}(id=${plato.id})}">Ver plato</a>
+			</div>
 		</div>
 	</div>
 </div>

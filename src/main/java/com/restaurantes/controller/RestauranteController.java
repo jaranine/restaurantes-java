@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public class RestauranteController {
         List<Restaurante> restaurantes = restauranteRepository.findAll();
         model.addAttribute("restaurantes", restauranteRepository.findAll());
         model.addAttribute("numeroRestaurantes", restaurantes.size());
-        model.addAttribute("title", "Lista de restaurantes");
+        model.addAttribute("titulo", "Lista de restaurantes");
         return "restaurantes/restaurante-lista";
     }
 
