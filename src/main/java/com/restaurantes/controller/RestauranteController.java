@@ -1,6 +1,8 @@
 package com.restaurantes.controller;
 
+import com.restaurantes.model.Plato;
 import com.restaurantes.model.Restaurante;
+import com.restaurantes.repository.PlatoRepository;
 import com.restaurantes.repository.RestauranteRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +18,11 @@ public class RestauranteController {
 
     // Inyectar el restaurante repository
     private final RestauranteRepository restauranteRepository;
+    private final PlatoRepository platoRepository;
 
-    public RestauranteController(RestauranteRepository restauranteRepository) {
+    public RestauranteController(RestauranteRepository restauranteRepository, PlatoRepository platoRepository) {
         this.restauranteRepository = restauranteRepository;
+        this.platoRepository = platoRepository;
     }
 
     /*
@@ -57,6 +61,14 @@ public class RestauranteController {
             // el restaurante si existe
             Restaurante restaurante = restauranteOptional.get();
             model.addAttribute("restaurante", restaurante);
+
+            // opcional:
+            // cargar los platos (Dish) de este restaurant en el model
+            List<Plato> platos = platoRepository.
+                    findByRestauranteIdOrderByPrecio(
+                            restaurante.getId());
+            model.addAttribute("platos", platos);
+
             return "restaurantes/restaurante-detalle";
         }
             // el restaurante no existe
