@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 // anotaciones de JPA
 @Entity
-@Table(name = "reseñas")
+@Table(name = "resenas")
 public class Resena {
 
     @Id
@@ -28,11 +28,18 @@ public class Resena {
     @Column(length = 1000)
     private String descripcion;
 
+    private Integer clasificacion;
+
     @Builder.Default // para que el builder no ponga este campo a null
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
+    @ToString.Exclude
     @ManyToOne
     private Restaurante restaurante;
+
+    @ToString.Exclude
+    @ManyToOne
+    private Plato plato;
 
 //    @ManyToOne
 //    private User user;

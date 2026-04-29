@@ -1,35 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Restaurantes Java</title>
-	<link rel="icon" type="image/x-icon" href="favicon.ico">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-</head>
-<body>
-<header class="bg-dark mb-5">
-	<div class="container">
-		<nav class="navbar border-bottom border-body" data-bs-theme="dark">
-			<h1 class="text-white">Restaurantes en Java</h1>
-			<a target="_blank" href="https://www.youtube.com/watch?v=qbWqXKN3m3c" class="align-right fw-bolder btn btn-secondary">
-				Pulsa este botón si quieres ser un chico superguay
-			</a>
-		</nav>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="~{layout/head :: head('Restaurantes')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+<main class="container flex-grow-1">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="mb-0" th:text="${titulo}">Restaurantes</h1>
+		<span class="badge bg-secondary fs-6" th:text="|${numeroRestaurantes} resultados|">0 resultados</span>
 	</div>
-</header>
-<div class="container">
-	<h1 th:text="${titulo}">Restaurantes listado</h1>
-	<p th:text="|${#lists.size(restaurantes)} resultados|"></p>
-	<p th:text="|${restaurantes.size()} resultados|"></p>
-	<p th:text="|${numeroRestaurantes} resultados|"></p>
-	<ul class="list-group">
-		<li class="list-group-item" th:each="restaurante : ${restaurantes}">
-			<span th:text="${restaurante.nombre}"></span>
-			<span th:text="${restaurante.precioMedio}"></span>
-			<a th:href="@{/restaurantes/{id}(id=${restaurante.id})}">Ver restaurante</a>
-		</li>
-	</ul>
-</div>
+
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+		<div class="col" th:each="restaurante : ${restaurantes}">
+			<div class="card card-restaurant h-100 shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">
+						<i class="fa-solid fa-store text-primary me-2"></i>
+						<span th:text="${restaurante.nombre}">Nombre</span>
+					</h5>
+					<p class="card-text">
+                        <span class="badge bg-success">
+                            <i class="fa-solid fa-euro-sign me-1"></i>
+                            <span th:text="${restaurante.precioMedio}">0</span>
+                        </span>
+					</p>
+				</div>
+				<div class="card-footer bg-transparent border-0 pt-0">
+					<a th:href="@{/restaurantes/{id}(id=${restaurante.id})}"
+					   class="btn btn-outline-primary btn-sm w-100">
+						<i class="fa-regular fa-eye me-1"></i> Ver restaurante
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="mt-4">
+		<a th:href="@{/restaurantes/create}" class="btn btn-success">
+			<i class="fa-solid fa-plus me-1"></i> Crear restaurante
+		</a>
+	</div>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
 </body>
 </html>

@@ -48,5 +48,19 @@
 		</div>
 	</div>
 </div>
+<div>
+	<h2>Opiniones de nuestros clientes</h2>
+
+	<p th:if="${resenas.isEmpty()}">Nadie ha comentado todavía, sé el primero en escribir una opinión.</p>
+
+	<ul th:unless="${resenas.isEmpty()}">
+		<li th:each="resena : ${resenas}">
+			<p th:text="${resena.titulo}"></p>
+			<p th:text="${resena.descripcion}"></p>
+			<p th:text="${'Valoración: ' + resena.clasificacion + ' /5 estrellas'}"></p>
+			<p th:text="${'Fecha: ' + resena.fechaCreacion}"></p>
+		</li>
+	</ul>
+</div>
 </body>
 </html>

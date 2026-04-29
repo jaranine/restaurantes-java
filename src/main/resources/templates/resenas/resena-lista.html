@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Reviews Listado</title>
+
+
+</head>
+<body>
+
+<h1>Opiniones de clientes</h1>
+
+<ul>
+	<li th:each="resena : ${resenas}">
+		<p th:text="${resena.titulo}"></p>
+		<p th:text="${resena.descripcion}"></p>
+		<p th:text="${'Valoración: ' + resena.clasificacion + ' /5 estrellas'}"></p>
+		<p th:text="${'Fecha: ' + resena.fechaCreacion}"></p>
+
+		<p th:if="${resena.restaurante != null}"
+		   th:text="${resena.restaurante.nombre}"></p>
+
+		<p th:if="${resena.plato != null}"
+		   th:text="${resena.plato.nombre}"></p>
+
+		<p th:if="${resena.plato != null && resena.plato.restaurante != null}"
+		   th:text="${resena.plato.restaurante.nombre}"></p>
+
+
+		<a th:if="${resena.restaurante != null}"
+		   th:href="@{/restaurantes/{id}(id=${resena.restaurante.id})}">Ver restaurante</a>
+	</li>
+</ul>
+
+</body>
+</html>

@@ -303,6 +303,42 @@ public class RestaurantesJavaApplication {
         System.out.println("Precio totalPrice: " + precioTotal);
         System.out.println("Precio totalPrice2: " + precioTotal2);
 
+        // Crear tres reseñas usando @Builder
+        ResenaRepository resenaRepository = context.getBean(ResenaRepository.class);
+        Resena resena1 =Resena.builder()
+                .descripcion("Te atienden bien y en asturiano")
+                .restaurante(hamburgueseriaAsturiana)
+                .titulo("Restaurante espectacular")
+                .clasificacion(5)
+                .build();
+        Resena resena2 =Resena.builder()
+                .titulo("Horrible")
+                .restaurante(restaurante2)
+                .descripcion("No te atienden en asturiano")
+                .clasificacion(1)
+                .build();
+        Resena resena3 =Resena.builder()
+                .titulo("Más o menos")
+                .restaurante(restEspanol)
+                .descripcion("Se sabían algunas palabras en asturiano")
+                .clasificacion(3)
+                .build();
+
+        Resena resena4 = Resena.builder()
+                .descripcion("Ni fu ni fa")
+                .plato(cachopo)
+                .titulo("Me pusieron de menos")
+                .clasificacion(2)
+                .build();
+
+        Resena resena5 = Resena.builder()
+                .descripcion("Excelente")
+                .plato(fabada)
+                .titulo("Guay")
+                .clasificacion(5)
+                .build();
+
+        resenaRepository.saveAll(List.of(resena1, resena2, resena3, resena4, resena5));
     }
 
 }

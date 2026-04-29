@@ -1,9 +1,12 @@
 package com.restaurantes.controller;
 
 import com.restaurantes.model.Plato;
+import com.restaurantes.model.Resena;
+import com.restaurantes.repository.ResenaRepository;
 import com.restaurantes.model.Restaurante;
 import com.restaurantes.repository.PlatoRepository;
 import com.restaurantes.repository.RestauranteRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +16,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@AllArgsConstructor // lombok
 public class RestauranteController {
 
     // Inyectar el restaurante repository
     private final RestauranteRepository restauranteRepository;
     private final PlatoRepository platoRepository;
-
-    public RestauranteController(RestauranteRepository restauranteRepository, PlatoRepository platoRepository) {
-        this.restauranteRepository = restauranteRepository;
-        this.platoRepository = platoRepository;
-    }
+    private final ResenaRepository resenaRepository;
+    //public RestauranteController(RestauranteRepository restauranteRepository, PlatoRepository platoRepository) {
+    //    this.restauranteRepository = restauranteRepository;
+    //    this.platoRepository = platoRepository;
+    //}
 
     /*
     Métodos comunes a clase controller:
@@ -67,6 +71,11 @@ public class RestauranteController {
                     findByRestauranteIdOrderByPrecio(
                             restaurante.getId());
             model.addAttribute("platos", platos);
+
+            // resenas
+            //List<Resena> resenas = resenaRepository.findAll();
+            List<Resena> resenas = resenaRepository.findByRestaurante_IdOrderByFechaCreacionDesc(restaurante.getId());
+            model.addAttribute("resenas", resenas); // accesibles desde HTML
 
             return "restaurantes/restaurante-detalle";
         }
