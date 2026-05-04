@@ -2,6 +2,7 @@ package com.restaurantes.controller;
 
 import com.restaurantes.model.Plato;
 import com.restaurantes.model.Resena;
+import com.restaurantes.model.enums.TipoComida;
 import com.restaurantes.repository.ResenaRepository;
 import com.restaurantes.model.Restaurante;
 import com.restaurantes.repository.PlatoRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,19 +48,26 @@ public class RestauranteController {
     // Get all restaurantes
     //http://localhost:8080/restaurantes
     @GetMapping("restaurantes")
-    public String restauranteLista(Model model) {
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        model.addAttribute("restaurantes", restauranteRepository.findAll());
+    public String restauranteLista(
+            Model model,
+            @RequestParam(required = false) TipoComida tipoComida
+    ) {
+//        List<Restaurante> restaurantes = restauranteRepository.findAll();
+//        List<Restaurante> restaurantes = restauranteRepository.findByActivoTrue();
+
+        List<Restaurante> restaurantes = restauranteRepository.findActivoFiltering(tipoComida);
+        model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("numeroRestaurantes", restaurantes.size());
         model.addAttribute("titulo", "Lista de restaurantes");
         return "restaurantes/restaurante-lista";
     }
 
-    // nuevo mtodo para traer un solo restaurante por su id
+    // nuevo metodo para traer un solo restaurante por su id
     @GetMapping("restaurantes/{id}")
     public String restauranteDetalle(@PathVariable Long id, Model model) {
 
-        Optional<Restaurante> restauranteOptional = restauranteRepository.findById(id);
+//        Optional<Restaurante> restauranteOptional = restauranteRepository.findById(id);
+        Optional<Restaurante> restauranteOptional = restauranteRepository.findByIdAndActivoTrue(id);
 
         if (restauranteOptional.isPresent()) {
             // el restaurante si existe
@@ -81,6 +90,19 @@ public class RestauranteController {
         }
             // el restaurante no existe
             return "redirect:/restaurantes";
+    }
+
+    @GetMapping("restaurantes/desactivar/{id}")
+    public String desactivarRestaurante(@PathVariable Long id, Model model) {
+        Optional<Restaurante> restauranteOptional = restauranteRepository.findById(id);
+
+        if(restauranteOptional.isPresent()) {
+            Restaurante restaurante = restauranteOptional.get();
+            restaurante.setActivo(false);
+            restauranteRepository.save(restaurante);
+        }
+
+        return "redirect:/restaurantes";
     }
 
 }

@@ -17,6 +17,7 @@ public class Pedido {
     private Integer numeroMesa;
     private Integer numeroComensales;
     private Double precioTotal;
+    private Integer numeroProductos;
     private Double propina;
 
     @Enumerated(EnumType.STRING)

@@ -3,13 +3,22 @@
 <head lang="en" th:replace="~{layout/head :: head('Restaurantes')}"></head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav th:replace="~{layout/navbar :: navbar}"></nav>
+<header th:replace="~{layout/navbar :: navbar}"></header>
 
 <main class="container flex-grow-1">
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1 class="mb-0" th:text="${titulo}">Restaurantes</h1>
 		<span class="badge bg-secondary fs-6" th:text="|${numeroRestaurantes} resultados|">0 resultados</span>
 	</div>
+
+	<!-- Opcional: agregar filtros -->
+
+	<!-- Filtro por tipo comida
+	/restaurants?foodType=SPANISH
+	/restaurants?foodType=JAPANESE
+	-->
+	<a th:href="@{/restaurantes(tipoComida='JAPANESE')}" class="btn btn-sm btn-secondary">Comida japonesa</a>
+	<a th:href="@{/restaurantes(tipoComida='SPANISH')}" class="btn btn-sm btn-secondary">Comida española</a>
 
 	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
 		<div class="col" th:each="restaurante : ${restaurantes}">
@@ -30,6 +39,11 @@
 					<a th:href="@{/restaurantes/{id}(id=${restaurante.id})}"
 					   class="btn btn-outline-primary btn-sm w-100">
 						<i class="fa-regular fa-eye me-1"></i> Ver restaurante
+					</a>
+					<!-- Botón Desactivar restaurante que cambia Active a false y hace redirect a list -->
+					<a th:href="@{/restaurantes/desactivar/{id}(id=${restaurante.id})}"
+					   class="btn btn-warning btn-sm w-100 mt-2">
+						<i class="fa-solid fa-ban me-1"></i> Desactivar restaurante
 					</a>
 				</div>
 			</div>

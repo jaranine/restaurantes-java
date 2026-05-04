@@ -20,6 +20,13 @@ public class PlatoController {
     private final PlatoRepository platoRepository;
     private final ResenaRepository resenaRepository;
 
+    @GetMapping("platos")
+    public String platosLista(Model model) {
+        List<Plato> platos = platoRepository.findAll();
+        model.addAttribute("platos", platos);
+        return "platos/plato-lista";
+    }
+
     @GetMapping("platos/{id}")
     public String platoDetalle(@PathVariable Long id, Model model) {
         Optional<Plato> platoOptional = platoRepository.findById(id);
