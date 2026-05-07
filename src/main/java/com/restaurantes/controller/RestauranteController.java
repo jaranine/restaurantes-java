@@ -10,9 +10,8 @@ import com.restaurantes.repository.RestauranteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,12 +49,14 @@ public class RestauranteController {
     @GetMapping("restaurantes")
     public String restauranteLista(
             Model model,
-            @RequestParam(required = false) TipoComida tipoComida
+            @RequestParam(required = false) TipoComida tipoComida,
+            @RequestParam(required = false) Double precio,
+            @RequestParam(required = false) String titulo
     ) {
 //        List<Restaurante> restaurantes = restauranteRepository.findAll();
 //        List<Restaurante> restaurantes = restauranteRepository.findByActivoTrue();
 
-        List<Restaurante> restaurantes = restauranteRepository.findActivoFiltering(tipoComida);
+        List<Restaurante> restaurantes = restauranteRepository.findActivoFiltering(tipoComida, precio, titulo);
         model.addAttribute("restaurantes", restaurantes);
         model.addAttribute("numeroRestaurantes", restaurantes.size());
         model.addAttribute("titulo", "Lista de restaurantes");
@@ -103,6 +104,29 @@ public class RestauranteController {
         }
 
         return "redirect:/restaurantes";
+    }
+
+    @GetMapping("restaurantes/nuevo")
+    public String nuevosRestaurantes(Model model) {
+        model.addAttribute("restaurante", new Restaurante());
+        model.addAttribute("tiposComida", TipoComida.values());
+        return "restaurantes/restaurante-form";
+    }
+
+    // EDITAR UN RESTAURANTE EXISTENTE
+    @GetMapping("restaurants/editar/{id}")
+    public String editarRestaurante(@PathVariable Long id, Model model) {
+        model.addAttribute("restaurante", restauranteRepository.findById(id).orElseThrow());
+        model.addAttribute("tipoComida", TipoComida.values());
+        return "restaurantes/restaurante-form";
+    }
+
+    @PostMapping("restaurants")
+    public String crearRestaurante(@ModelAttribute Restaurante restaurante) {
+
+        System.out.println("RESTAURANTE RECIBIDO: " + restaurante);
+        restauranteRepository.save(restaurante);
+        return "redirect:/restaurantes/" + restaurante.getId();
     }
 
 }

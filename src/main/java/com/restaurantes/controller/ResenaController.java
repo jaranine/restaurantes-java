@@ -1,5 +1,6 @@
 package com.restaurantes.controller;
 
+import com.restaurantes.model.Resena;
 import com.restaurantes.repository.ResenaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -36,4 +39,15 @@ public class ResenaController {
         return "redirect:/resenas";
     }
 
+    @GetMapping("resenas/disable/{id}")
+    public String deshabilitar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Optional<Resena> resenaOptional = resenaRepository.findById(id);
+//        if (resenaOptional.isPresent()) {
+//            Resena resena = resenaOptional.get();
+//            resena.setActivo(false);
+//            resenaRepository.save(resena);
+//        }
+        redirectAttributes.addFlashAttribute("mensaje", "Desactivado exitosamente");
+        return "redirect:/resenas";
+    }
 }

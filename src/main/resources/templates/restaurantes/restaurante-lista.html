@@ -6,7 +6,7 @@
 <header th:replace="~{layout/navbar :: navbar}"></header>
 
 <main class="container flex-grow-1">
-	<div class="d-flex justify-content-between align-items-center mb-4">
+	<div class="d-flex justify-content-between align-items-center mb-2">
 		<h1 class="mb-0" th:text="${titulo}">Restaurantes</h1>
 		<span class="badge bg-secondary fs-6" th:text="|${numeroRestaurantes} resultados|">0 resultados</span>
 	</div>
@@ -17,8 +17,56 @@
 	/restaurants?foodType=SPANISH
 	/restaurants?foodType=JAPANESE
 	-->
-	<a th:href="@{/restaurantes(tipoComida='JAPANESE')}" class="btn btn-sm btn-secondary">Comida japonesa</a>
-	<a th:href="@{/restaurantes(tipoComida='SPANISH')}" class="btn btn-sm btn-secondary">Comida española</a>
+	<a th:href="@{/restaurantes/nuevo}" class="btn btn-primary btn-sm mb-2">
+		<i class="fa-solid fa-plus"></i>
+		Crear restaurante
+	</a>
+	<div class="mb-3">
+		<h5>Filtros rápidos</h5>
+		<a th:href="@{/restaurantes}" class="btn btn-sm btn-primary">Todos</a>
+		<a th:href="@{/restaurantes(tipoComida='JAP')}" class="btn btn-sm btn-secondary">Comida japonesa</a>
+		<a th:href="@{/restaurantes(tipoComida='ESP')}" class="btn btn-sm btn-secondary">Comida española</a>
+		<a th:href="@{/restaurantes(precio=15)}" class="btn btn-sm btn-info">Hasta 15€</a>
+		<a th:href="@{/restaurantes(precio=30)}" class="btn btn-sm btn-info">Hasta 30€</a>
+		<a th:href="@{/restaurantes(titulo='cachopo')}" class="btn btn-sm btn-warning">Cachopo</a>
+		<a th:href="@{/restaurantes(titulo='hamburguesería')}" class="btn btn-sm btn-warning">Hamburguesa</a>
+	</div>
+
+	<div class="mb-3">
+		<h5>Búsqueda avanzada</h5>
+		<form th:action="@{/restaurantes}" method="get" class="row align-items-end">
+			<div class="col-auto">
+				<label class="form-label form-label-sm">Título</label>
+				<input type="text" name="titulo" class="form-control form-control-sm"
+				       placeholder="Busca por título..." th:value="${param.titulo}">
+			</div>
+			<div class="col-auto">
+				<label class="form-label form-label-sm">Precio máximo</label>
+				<input type="number" min="10" step="1" name="precio"
+				       class="form-control form-control-sm" th:value="${param.precio}">
+			</div>
+			<div class="col-auto">
+				<label class="form-label form-label-sm">Tipo comida</label>
+				<select name="tipoComida" class="form-select form-select-sm">
+					<option value="" th:selected="${param.tipoComida == null}">Todas</option>
+					<option value="ESP" th:selected="${param.tipoComida != null and
+					param.tipoComida[0] == 'ESP'}">Española</option>
+					<option value="JAP" th:selected="${param.tipoComida != null and
+					param.tipoComida[0] == 'JAP'}">Japonesa</option>
+				</select>
+			</div>
+			<div class="col-auto">
+				<button type="submit" class="btn btn-primary btn-sm">
+					<i class="fa-solid fa-magnifying-glass"></i>
+					Buscar
+				</button>
+				<a th:href="@{/restaurantes}" class="btn btn-danger btn-sm">
+					<i class="fa-solid fa-broom"></i>
+					Limpiar filtros
+				</a>
+			</div>
+		</form>
+	</div>
 
 	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
 		<div class="col" th:each="restaurante : ${restaurantes}">
@@ -37,24 +85,24 @@
 				</div>
 				<div class="card-footer bg-transparent border-0 pt-0">
 					<a th:href="@{/restaurantes/{id}(id=${restaurante.id})}"
-					   class="btn btn-outline-primary btn-sm w-100">
-						<i class="fa-regular fa-eye me-1"></i> Ver restaurante
+					   class="btn btn-primary btn-sm w-100">
+						<i class="fa-regular fa-eye me-1"></i> Ver
 					</a>
 					<!-- Botón Desactivar restaurante que cambia Active a false y hace redirect a list -->
 					<a th:href="@{/restaurantes/desactivar/{id}(id=${restaurante.id})}"
 					   class="btn btn-warning btn-sm w-100 mt-2">
-						<i class="fa-solid fa-ban me-1"></i> Desactivar restaurante
+						<i class="fa-solid fa-ban me-1"></i> Desactivar
+					</a>
+
+					<a th:href="@{/restaurantes/editar/{id}(id=${restaurante.id})}"
+					   class="btn btn-success btn-sm w-100 mt-2">
+						<i class="fa-solid fa-pencil me-1"></i> Editar
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="mt-4">
-		<a th:href="@{/restaurantes/create}" class="btn btn-success">
-			<i class="fa-solid fa-plus me-1"></i> Crear restaurante
-		</a>
-	</div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
