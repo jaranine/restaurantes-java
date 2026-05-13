@@ -117,7 +117,7 @@ public class RestauranteController {
     @GetMapping("restaurants/editar/{id}")
     public String editarRestaurante(@PathVariable Long id, Model model) {
         model.addAttribute("restaurante", restauranteRepository.findById(id).orElseThrow());
-        model.addAttribute("tipoComida", TipoComida.values());
+        model.addAttribute("tiposComida", TipoComida.values());
         return "restaurantes/restaurante-form";
     }
 

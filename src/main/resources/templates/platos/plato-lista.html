@@ -6,7 +6,6 @@
 <header th:replace="~{layout/navbar :: navbar}"></header>
 
 <main class="container flex-grow-1">
-
 	<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
 		<h1 class="mb-0">
 			<i class="fa-solid fa-utensils text-primary me-2"></i>Platos
@@ -14,6 +13,11 @@
 		<span class="badge bg-secondary fs-6"
 		      th:text="|${#lists.size(platos)} platos|">0 platos</span>
 	</div>
+
+	<a th:href="@{/platos/nuevo}" class="btn btn-primary btn-sm mb-2">
+		<i class="fa-solid fa-plus"></i>
+		Crear plato
+	</a>
 
 	<!-- Estado vacío -->
 	<div th:if="${#lists.isEmpty(platos)}" class="alert alert-light border text-center py-5">
@@ -64,6 +68,10 @@
 					<a th:href="@{/platos/{id}(id=${plato.id})}"
 					   class="btn btn-sm btn-outline-primary flex-shrink-0">
 						<i class="fa-regular fa-eye me-1"></i>Ver
+					</a>
+					<a th:href="@{/platos/editar/{id}(id=${plato.id})}"
+					   class="btn btn-sm btn-outline-primary flex-shrink-0">
+						<i class="fa-solid fa-pencil me-1"></i>Editar
 					</a>
 				</div>
 			</div>

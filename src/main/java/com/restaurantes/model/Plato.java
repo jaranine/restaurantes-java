@@ -14,7 +14,7 @@ public class Plato {
 
     private String nombre;
 
-    @Column(name = "descripcion", length = 500)
+    @Column(name = "descripción", length = 500)
     private String descripcion;
 
     private Double precio;
