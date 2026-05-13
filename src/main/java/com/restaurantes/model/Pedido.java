@@ -4,6 +4,7 @@ import com.restaurantes.model.enums.EstadoPedido;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Pedidos")
@@ -13,12 +14,15 @@ public class Pedido {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private LocalDate fecha = LocalDate.now();
+    private LocalDateTime fecha = LocalDateTime.now();
     private Integer numeroMesa;
     private Integer numeroComensales;
     private Double precioTotal;
     private Integer numeroProductos;
     private Double propina;
+
+    @Column(length = 500)
+    private String sugerencias;
 
     @Enumerated(EnumType.STRING)
     private EstadoPedido estadoPedido = EstadoPedido.PENDIENTE;
@@ -26,16 +30,34 @@ public class Pedido {
     @ManyToOne
     private Restaurante restaurante;
 
-    public Pedido(LocalDate fecha, Integer numeroMesa, Integer numeroComensales, Double precioTotal, Double propina, EstadoPedido estadoPedido, Restaurante restaurante) {
-        this.fecha = fecha;
-        this.numeroMesa = numeroMesa;
-        this.numeroComensales = numeroComensales;
-        this.precioTotal = precioTotal;
-        this.propina = propina;
-        this.estadoPedido = estadoPedido;
+    public Pedido(Restaurante restaurante, EstadoPedido estadoPedido, String sugerencias, Double propina, Integer numeroProductos, Double precioTotal, Integer numeroComensales, Integer numeroMesa, LocalDateTime fecha, Long id) {
         this.restaurante = restaurante;
+        this.estadoPedido = estadoPedido;
+        this.sugerencias = sugerencias;
+        this.propina = propina;
+        this.numeroProductos = numeroProductos;
+        this.precioTotal = precioTotal;
+        this.numeroComensales = numeroComensales;
+        this.numeroMesa = numeroMesa;
+        this.fecha = fecha;
     }
     public Pedido() {}
+
+    public String getSugerencias() {
+        return sugerencias;
+    }
+
+    public void setSugerencias(String sugerencias) {
+        this.sugerencias = sugerencias;
+    }
+
+    public Integer getNumeroProductos() {
+        return numeroProductos;
+    }
+
+    public void setNumeroProductos(Integer numeroProductos) {
+        this.numeroProductos = numeroProductos;
+    }
 
     public Long getId() {
         return id;
@@ -45,11 +67,11 @@ public class Pedido {
         this.id = id;
     }
 
-    public LocalDate getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 

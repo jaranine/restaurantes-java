@@ -114,14 +114,14 @@ public class RestauranteController {
     }
 
     // EDITAR UN RESTAURANTE EXISTENTE
-    @GetMapping("restaurants/editar/{id}")
+    @GetMapping("restaurantes/editar/{id}")
     public String editarRestaurante(@PathVariable Long id, Model model) {
         model.addAttribute("restaurante", restauranteRepository.findById(id).orElseThrow());
         model.addAttribute("tiposComida", TipoComida.values());
         return "restaurantes/restaurante-form";
     }
 
-    @PostMapping("restaurants")
+    @PostMapping("restaurantes")
     public String crearRestaurante(@ModelAttribute Restaurante restaurante) {
 
         System.out.println("RESTAURANTE RECIBIDO: " + restaurante);

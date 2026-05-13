@@ -37,8 +37,13 @@
 				</div>
 				<div class="d-flex gap-2 align-items-center">
                             <span class="badge fs-6 px-3 py-2"
-                                  th:classappend="${pedido.estadoPedido.name() == 'PENDING' ? 'bg-warning text-dark' : (pedido.estadoPedido.name() == 'IN_PROGRESS' ? 'bg-info text-dark' : 'bg-success')}"
-                                  th:text="${pedido.estadoPedido.name() == 'PENDING' ? 'Pendiente' : (pedido.estadoPedido.name() == 'IN_PROGRESS' ? 'En curso' : 'Finalizado')}"></span>
+                                  th:classappend="${pedido.estadoPedido.name() == 'PENDIENTE' ? 'bg-warning text-dark' : (pedido.estadoPedido.name() == 'EN_PREPARACION' ? 'bg-info text-dark' : 'bg-success')}"
+                                  th:text="${pedido.estadoPedido.name() == 'PENDIENTE' ? 'Pendiente' : (pedido.estadoPedido.name() == 'EN_PREPARACION' ? 'En curso' : 'Finalizado')}"></span>
+					<a th:if="${pedido.estadoPedido.name() != 'SERVIDO'}"
+					   th:href="@{/pedidos/{id}/finalizar(id=${pedido.id})}"
+					   class="btn btn-success btn-sm">
+						<i class="fa-solid fa-coins me-1"></i> Finalizar pedido
+					</a>
 					<a th:href="@{/pedidos}" class="btn btn-outline-secondary btn-sm">
 						<i class="fa-solid fa-arrow-left me-1"></i> Volver
 					</a>
@@ -191,39 +196,58 @@
 					<th class="text-center">Cantidad</th>
 					<th class="text-end">Precio</th>
 					<th class="text-end">Subtotal</th>
-					<th class="text-end pe-3"></th>
+					<th class="text-center pe-3">Ver</th> <!-- Ver -->
+					<th class="text-center pe-3" th:if="${pedido.estadoPedido.name() != 'SERVIDO'}">Modificar</th>
+					<th class="text-center pe-3" th:if="${pedido.estadoPedido.name() != 'SERVIDO'}">Eliminar</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr th:each="line, iter : ${lineasPedido}">
+				<tr th:each="linea, iter : ${lineasPedido}">
 					<td class="ps-3 text-muted" th:text="${iter.count}"></td>
 					<td>
 						<div class="fw-semibold">
-							<a th:href="@{/dishes/{id}(id=${line.plato.id})}"
+							<a th:href="@{/platos/{id}(id=${linea.plato.id})}"
 							   class="text-decoration-none link-dark"
-							   th:text="${line.plato.nombre}"></a>
+							   th:text="${linea.plato.nombre}"></a>
 						</div>
 						<div class="small text-muted text-truncate" style="max-width: 320px;"
-						     th:text="${line.plato.descripcion}"></div>
+						     th:text="${linea.plato.descripcion}"></div>
 					</td>
 					<td>
                                     <span class="badge bg-light text-dark border"
-                                          th:if="${line.plato.tipoPlato != null}"
-                                          th:text="${line.plato.tipoPlato.label}"></span>
+                                          th:if="${linea.plato.tipoPlato != null}"
+                                          th:text="${linea.plato.tipoPlato.label}"></span>
 					</td>
 					<td class="text-center">
-						<span class="badge bg-secondary rounded-pill" th:text="${line.cantidad}"></span>
+						<span class="badge bg-secondary rounded-pill" th:text="${linea.cantidad}"></span>
 					</td>
 					<td class="text-end">
-						<span th:text="${#numbers.formatDecimal(line.plato.precio, 1, 2)}"></span> €
+						<span th:text="${#numbers.formatDecimal(linea.plato.precio, 1, 2)}"></span> €
 					</td>
 					<td class="text-end fw-semibold"
-					    th:text="|${#numbers.formatDecimal(line.cantidad * line.plato.precio, 1, 2)} €|"></td>
-					<td class="text-end pe-3">
-						<a th:href="@{/dishes/{id}(id=${line.plato.id})}"
+					    th:text="|${#numbers.formatDecimal(linea.cantidad * linea.plato.precio, 1, 2)} €|"></td>
+					<td class="text-center">
+						<a th:href="@{/platos/{id}(id=${linea.plato.id})}"
 						   class="btn btn-sm btn-outline-primary"
 						   title="Ver plato">
 							<i class="fa-regular fa-eye"></i>
+						</a>
+					</td>
+					<td th:if="${pedido.estadoPedido.name() != 'SERVIDO'}" class="text-center">
+
+						<form th:action="@{/pedidos/{pedidoId}/lineas/{lineaId}(pedidoId=${pedido.id},lineaId=${linea.id})}"
+						      method="post" class="d-flex align-items-center justify-content-center gap-1">
+							<input name="cantidad" type="number" min="1" style="max-width: 90px;"
+							       th:value="${linea.cantidad}" class="form-control form-control-sm">
+							<button class="btn btn-sm btn-success">
+								<i class="fa-solid fa-floppy-disk"></i>
+							</button>
+						</form>
+					</td>
+					<td th:if="${pedido.estadoPedido.name() != 'SERVIDO'}" class="text-center">
+						<a class="btn btn-sm btn-danger"
+						   th:href="@{/pedidos/{pedidoId}/lineas/{lineaId}/borrar(pedidoId=${pedido.id},lineaId=${linea.id})}">
+							<i class="fa-solid fa-trash"></i>
 						</a>
 					</td>
 				</tr>
@@ -236,15 +260,69 @@
 			<div class="row justify-content-end">
 				<div class="col-md-5 col-lg-4">
 					<dl class="row mb-0">
-						<dt class="col-7 text-muted fw-normal">Propina</dt>
-						<dd class="col-5 text-end mb-1">
+						<dt class="col-7 text-muted fw-normal" th:if="${pedido.estadoPedido.name() == 'SERVIDO'}">Propina</dt>
+						<dd class="col-5 text-end mb-1" th:if="${pedido.estadoPedido.name() == 'SERVIDO'}">
 							<span th:text="${#numbers.formatDecimal(pedido.propina, 1, 2)}"></span> €
 						</dd>
 						<dt class="col-7 fs-5 mb-0">Total</dt>
 						<dd class="col-5 text-end fs-5 fw-bold text-success mb-0">
 							<span th:text="${#numbers.formatDecimal(pedido.precioTotal, 1, 2)}"></span> €
 						</dd>
+						<dt class="col-7 fs-5 mb-0" th:if="${pedido.estadoPedido.name() == 'SERVIDO'}">Suma total</dt>
+						<dd class="col-5 text-end fs-5 fw-bold text-success mb-0" th:if="${pedido.estadoPedido.name() == 'SERVIDO'}">
+							<span th:text="${#numbers.formatDecimal(pedido.precioTotal + pedido.propina, 1, 2)}"></span> €
+						</dd>
 					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card shadow-sm border-0 mb-4" th:if="${pedido.estadoPedido.name() != 'SERVIDO'}">
+		<div class="card-body">
+			<h5 class="mb-3">Sección de pago</h5>
+
+			<form th:action="@{/pedidos/{id}/finalizar(id=${pedido.id})}" method="get"
+			      class="row align-items-end justify-content-end gap-3">
+
+				<!-- si enviamos info sensible mejor cambiar a method post -->
+				<div class="col">
+					<label class="form-label" for="propina">Propina (€)</label>
+					<input type="number" id="propina" name="propina" min="0"
+					       class="form-control" value="0.00" step="0.01">
+				</div>
+
+				<div class="col">
+					<button type="submit" class="btn btn-sm btn-success">
+						<i class="fa-solid fa-credit-card"></i>
+						Pagar y finalizar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div th:if="${pedido.estadoPedido.name() != 'SERVIDO'}">
+		<h2 class="mt-4">Selecciona los platos deseados</h2>
+
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			<div class="col" th:each="plato : ${platos}">
+				<div class="card h-100">
+					<div class="card-body">
+						<h5 class="card-title" th:text="${plato.nombre}"></h5>
+						<p class="text-muted small" th:text="${plato.descripcion}"></p>
+						<strong th:text="|${#numbers.formatDecimal(plato.precio, 1, 2)} €|"></strong>
+					</div>
+					<div class="card-footer">
+
+						<form th:action="@{/pedidos/{id}/lineas(id=${pedido.id})}" method="post">
+							<input type="hidden" name="platoId" th:value="${plato.id}">
+							<button class="btn btn-sm btn-success">
+								<i class="fa-solid fa-plus"></i>
+								Añadir
+							</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

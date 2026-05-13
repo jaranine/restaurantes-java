@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> {
     List<LineaPedido> findByPedido_Id(Long id);
+    Optional<LineaPedido> findByPedido_IdAndPlato_Id(Long id, Long platoId);
     /*
     DDD - Domain Driven Design, podemos mover este cálculo a la raíz que es Order, que es la principal
     ya que este OrderLine es un agregado de esa raíz que añade información extra
