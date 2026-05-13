@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="~{layout/head :: head('Formulario Reseña')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<header th:replace="~{layout/navbar :: navbar}"></header>
+
+<main class="container flex-grow-1">
+
+	<h1 class="mb-0">
+		<i class="fa-solid fa-utensils text-primary me-2"></i>Formulario reseña
+	</h1>
+
+	<form th:action="@{/resenas}" method="post" th:object="${resena}">
+		<input type="hidden" th:field="*{id}">
+		<input type="hidden" th:field="*{restaurante}">
+		<input type="hidden" th:field="*{plato}">
+		<input type="hidden" th:field="*{fechaCreacion}">
+
+		<div class="alert alert-info my-3" th:if="${resena.restaurante != null}">
+			<i class="fa-solid fa-store"></i>
+			Reseña sobre el restaurante:
+			<strong th:text="${resena.restaurante.nombre}"></strong>
+		</div>
+
+		<div class="alert alert-info my-3" th:if="${resena.plato != null}">
+			<i class="fa-solid fa-utensils"></i>
+			Reseña sobre el plato:
+			<strong th:text="${resena.plato.nombre}"></strong>
+		</div>
+
+		<div class="mb-3">
+			<label for="titulo" class="form-label">Título</label>
+			<input id="titulo" type="text" class="form-control"
+			       th:field="*{titulo}" required maxlength="255">
+		</div>
+		<div class="mb-3">
+			<label for="descripcion" class="form-label">Descripción</label>
+			<textarea id="descripcion" class="form-control" rows="4"
+			          th:field="*{descripcion}" required maxlength="1000"></textarea>
+		</div>
+		<div class="mb-3">
+			<label for="clasificacion" class="form-label">Puntuación (de 1 a 5)</label>
+			<input type="number" id="clasificacion" class="form-control"
+			       th:field="*{clasificacion}" min="1" max="5" required>
+		</div>
+		<button type="submit" class="btn btn-success">
+			<i class="fa-solid fa-floppy-disk"></i>Enviar
+		</button>
+	</form>
+
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+<script th:replace="~{layout/footer :: scripts}"></script>
+
+</body>
+</html>
