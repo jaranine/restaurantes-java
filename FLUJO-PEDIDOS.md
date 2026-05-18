@@ -6,44 +6,44 @@
 Como cliente quiero poder iniciar un pedido sobre un restaurante, debo poder añadir platos a mi pedido, quitar platos de mi pedido, y finalizar pedido.
 
 
-1. restaurante-detalle.html (OK)
-    * Botón "Iniciar pedido"  /pedidos/nuevo?restauranteId=1
+1. restaurant-detail.html (OK)
+    * Botón "Iniciar pedido"  /orders/new?restaurantId=1
 
-2. PedidoController (OK)
-    * @GetMapping("pedidos/nuevo")   para entrar al formulario
-    * return pedido-form.html
+2. OrderController (OK)
+    * @GetMapping("orders/new")   para entrar al formulario  
+    * return order-form.html
 
-3. pedido-form.html (OK)
-    * restaurante precargado
+3. order-form.html (OK)
+    * restaurant precargado
     * numero mesa
     * numero de comensales
     * comentarios/sugerencias/alergias
-    * Botón Enviar (POST/pedidos)
+    * Botón Enviar (POST /orders)
 
-4. PedidoController
-    * @PostMapping("Pedidos")
+4. OrderController
+    * @PostMapping("orders")
     * save
-    * "redirect:/pedidos/" + pedido.getId();
+    * "redirect:/orders/" + order.getId();
 
-5. pedido-detalle.html
+5. order-detail.html
     * Sección con platos Añadibles al pedido
-    * En cada plato hay botón de Añadir --> POST /pedidos/1/lineas?platoId=1
+    * En cada plato hay botón de Añadir --> POST /orders/1/lines?dishId=1
 
-6. PedidoController
-    * @PostMapping("/pedidos/1/lineas")
-    * crea un Linea Pedido apuntando al Pedido y al Plato y lo guarda
-    *  "redirect:/pedidos/" + pedido.getId();
+6. OrderController
+    * @PostMapping("/orders/1/lines")
+    * crea un Order Line apuntando al Order y al Dish y lo guarda 
+    *  "redirect:/orders/" + order.getId();
 
-7. pedido-detalle.html (NUEVO)
-    * Poder modificar cantidad Plato  --> POST /pedidos/{id}/lineas/{id} cantidad
-    * Poder eliminar un LineaPedido --> GET /pedidos/{id}/lineas/{id}/borrar (OK)
+7. order-detail.html (NUEVO)
+    * Poder modificar cantidad Plato  --> POST /orders/{id}/lines/{id} quantity
+    * Poder eliminar un OrderLine --> GET /orders/{id}/lines/{id}/delete (OK)
 
-8. pedido-detalle.html Botón Finalizar apunta GET /pedidos/{id}/finalizar
+8. order-detail.html Botón Finalizar apunta GET /orders/{id}/finish
 
-9. PedidoController
-    * @GetMapping("/pedidos/{id}/finalizar")
-        * NUEVO: requestparam Double propina
-    * setEstadoPedido SERVIDO
-    * recalcular precio
-    * save
-    *  "redirect:/pedidos/" + pedido.getId();
+9. OrderController
+    * @GetMapping("/orders/{id}/finish")
+      * NUEVO: requestparam Double tip
+    * setStatus FINISHED
+    * recalculate price
+    * save 
+    *  "redirect:/orders/" + order.getId();
