@@ -5,10 +5,12 @@ import com.restaurantes.repository.PlatoRepository;
 import com.restaurantes.repository.ResenaRepository;
 import com.restaurantes.repository.RestauranteRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -31,7 +33,9 @@ public class ResenaController {
 
     @GetMapping("resenas/{id}")
     public String resena(Model model, @PathVariable Long id) {
-        model.addAttribute("resena",  resenaRepository.findById(id).orElseThrow());
+        model.addAttribute("review",
+                resenaRepository.findById(id)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No hay reseña")));
         return "resenas/resena-detalle";
     }
 
