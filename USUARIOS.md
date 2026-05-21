@@ -14,50 +14,107 @@ Queremos que haya usuario admin con rol ROLE_ADMIN que pueda gestionar los resta
 
 Para esto vamos a usar Spring Security, que es un framework de seguridad para aplicaciones web en Java.
 
-## Paso 1: dependencias en pom.xml
+## Paso 1: dependencias en pom.xml (OK)
 
 * spring-boot-starter-security
 * thymeleaf-extras-springsecurity6
 * spring-security-test
 * Opcional: spring-boot-starter-validation
 
-## Paso 2: crear entidad User y enum Role
+## Paso 2: crear entidad User y enum Role (OK)
 
 * enums/Role.java: ROLE_USER, ROLE_ADMIN
-* model/User.java: id, username, password, role
+* model/User.java: id, username, email, password, role
    * implements UserDetails de Spring Security
 
-## Paso 3: crear repositorio UserRepository
+* Opcionales: nif, phone, postalCode, bio, profilePictureUrl
+
+## Paso 3: crear repositorio UserRepository (OK)
 
 * repository/UserRepository.java:
   * findByUsername(String username)
+  * findByEmail(String email)
   * boolean existsByUsername(String username)
   * boolean existsByEmail(String email)
 
-## Paso 4: crear servicio UserService
+## Paso 4: crear servicio UserService (OK)
 
 * service/UserService.java
     * implements UserDetailsService de Spring Security
     * loadUserByUsername(String username)  sirve para que spring security pueda cargar el usuario a partir del username y comparar la contraseña al hacer login y demás
+    * register(RegisterForm form) para crear cuenta de usuario
 
-## Paso 5: crear SecurityConfig
+## Paso 5: crear SecurityConfig (OK)
 
 * config/SecurityConfig.java 
-    * securityFilterChain configura las rutas protegidas, login, logout, etc.
-    * passwordEncoder() para cifrar las contraseñas
+  * Creamos dos @Bean para que Spring Security sepa cómo proteger las rutas y cómo cifrar/comprobar passwords:
+      * securityFilterChain() configura las rutas protegidas, login, logout, etc.
+      * passwordEncoder() para cifrar las contraseñas
   
-## Paso 6: controlador AuthController
+
+## Paso 6: controlador AuthController (OK)
 
 * controller/AuthController.java
     * GET /login → muestra el formulario de login
     * GET /register → muestra el formulario de registro
     * POST /register → procesa el formulario de registro, crea el usuario con rol ROLE_USER
 
-## Paso 7: vistas Thymeleaf HTML
+## Paso 7: vistas Thymeleaf HTML (OK)
 
-* templates/auth/register.html
-* templates/auth/login.html
-* templates/fragments/navbar.html → mostrar enlaces de login/register o logout dependiendo de si el usuario está autenticado o no, usando thymeleaf-extras-springsecurity6
+* templates/auth/register.html (OK)
+
+* templates/auth/login.html (OK)
+
+* templates/fragments/navbar.html → mostrar enlaces de login/register o logout dependiendo de si el usuario está autenticado o no, usando thymeleaf-extras-springsecurity6 (OK)
+
+* restaurant-detail --> sec:authorize="isAuthenticated()" en el botón de Hacer pedido (OK)
+
+* restaurant-detail --> sec:authorize="hasRole('ADMIN')" en el botón de Desactivar y Editar (OK)
+
+* restaurant-detail --> sec:authorize="isAuthenticated()" en el botón de Escribir reseña (OK)
+
+* restaurant-list --> sec:authorize="hasRole('ADMIN')" en el botón de Crear restaurante, Editar y Desactivar (OK)
+
+* dish-list --> sec:authorize="hasRole('ADMIN')" en el botón de Crear plato, Editar (OK) 
+
+* dish-detail --> sec:authorize="isAuthenticated()" en el botón de Escribir reseña (OK)
+
+* review-list --> sec:authorize="hasRole('ADMIN')" en el botón de Editar y Borrar (OK)
+
+* review-detail --> sec:authorize="hasRole('ADMIN')" en el botón de Editar y Borrar (OK)
+
+
+
+## Paso 8: crear dos usuarios demo (OK)
+
+DataInitializer, clase en paquete config, que cree y guarde dos usuarios en base de datos.
+
+Paso 8: crear dos usuarios demo (OK)Más adelante usar esta clase para introducir datos de otras entidades y limpiar el Main
+
+* Restaurantes, Platos, Reviews, Pedidos
+
+
+## PASO 9: pantallas de error (OK)
+
+probar a entrar en urls protegidas por SecurityConfig:
+
+* usuario sin autenticar accede a pantallas que requieren autenticación --> /login
+
+* usuario autenticado ROLE_USER accede a pantallas de ADMIN --> /403
+
+Crear el 403.html
+
+## Paso 10: integración de User con Order y Review
+
+* Order.java: añadir campo User user con @ManyToOne
+* Review.java: añadir campo User user con @ManyToOne
+
+En controller OrderController, al crear una orden, asignar el usuario autenticado a la orden.
+
+En controller ReviewController, al crear una review, asignar el usuario autenticado a la review. (OK)
+
+
+
 
 ## Paso 8: opcional ViewSecurityAdvice.java
 
@@ -66,15 +123,6 @@ Esta clase proporciona métodos que se pueden usar en las vistas Thymeleaf para 
 Objetivo: `th:if="${isAuthenticated}` o `th:if=${isAdmin}`.
 
 * config/ViewSecurityAdvice.java
-    * isAuthenticated() para usar en Thymeleaf y mostrar/ocultar partes de la vista dependiendo de si el usuario está autenticado o no
-    * isAdmin()
-    * currentUserName()
-
-## Paso 9: integración de User con Order y Review
-
-* Order.java: añadir campo User user con @ManyToOne
-* Review.java: añadir campo User user con @ManyToOne
-
-En controller OrderController, al crear una orden, asignar el usuario autenticado a la orden.
-
-En controller ReviewController, al crear una review, asignar el usuario autenticado a la review.
+  * isAuthenticated() para usar en Thymeleaf y mostrar/ocultar partes de la vista dependiendo de si el usuario está autenticado o no
+  * isAdmin()
+  * currentUserName()

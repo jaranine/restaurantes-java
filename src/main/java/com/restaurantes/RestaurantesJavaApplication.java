@@ -1,7 +1,9 @@
 package com.restaurantes;
 
 import com.restaurantes.model.*;
-import com.restaurantes.model.enums.*;
+import com.restaurantes.model.enums.DishType;
+import com.restaurantes.model.enums.FoodType;
+import com.restaurantes.model.enums.OrderStatus;
 import com.restaurantes.repository.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,332 +15,366 @@ import java.util.Optional;
 
 // Una clase con @Entity equivale a una tabla de base de datos
 // Un objeto equivale a una fila en una tabla de base de datos
+
 @SpringBootApplication
 public class RestaurantesJavaApplication {
 
     public static void main(String[] args) {
+
         var context = SpringApplication.run(RestaurantesJavaApplication.class, args);
 
-        // obtener los repositorios para poder hacer operaciones de bases de datos con ellos
-        RestauranteRepository restauranteRepository = context.getBean(RestauranteRepository.class);
-        EmpleadoRepository empleadoRepository = context.getBean(EmpleadoRepository.class);
+        // obtener los repositorios para poder hacer operaciones de base de datos con ellos
+        // Los repositorios nos dan las operaciones CRUD (findAll, findById, save, delete)
+        RestaurantRepository restaurantRepository = context.getBean(RestaurantRepository.class);
+        EmployeeRepository employeeRepository = context.getBean(EmployeeRepository.class);
+        DishRepository dishRepository = context.getBean(DishRepository.class);
+        OrderRepository orderRepository = context.getBean(OrderRepository.class);
+        OrderLineRepository orderLineRepository = context.getBean(OrderLineRepository.class);
+        ReviewRepository reviewRepository = context.getBean(ReviewRepository.class);
 
-        // crear un objeto con getter/setter
-        Restaurante restaurante1 = new Restaurante();
-        restaurante1.setNombre("100 Montaditos");
-        restaurante1.setPrecioMedio(10.5);
-        restaurante1.setNumeroEmpleados(10);
-        restauranteRepository.save(restaurante1); // guardar en base de datos usando el repositorio: .save()
+        // crear un objeto restaurante: new
+        Restaurant nuevoRestaurante = new Restaurant(); // objeto
+        nuevoRestaurante.setName("Paco Bar");
+        nuevoRestaurante.setAveragePrice(20.33);
+        nuevoRestaurante.setNumberEmployees(5);
 
-        // crear un objeto con constructor
-        Restaurante restaurante2 = new Restaurante(30.50, "DItaly", 20);
-        restauranteRepository.save(restaurante2); // guardar en base de datos usando el repositorio: .save()
+        // guardar el restaurante en base de datos usando el repositorio: .save()
+        restaurantRepository.save(nuevoRestaurante);
 
-        // crear un empleado y guardarlo en base de datos
-        Empleado empleado1 = new Empleado(27, "12345678A", "Juanez", "Juan", null);
-        empleadoRepository.save(empleado1);
 
-        System.out.println(empleado1);
+        // Opción 1: crear un objeto vacío:
+        Restaurant rest = new Restaurant();
 
-        // obtener todos los restaurantes de la base de datos
+        // Opción 2: crear un objeto con datos:
+        Restaurant rest2 = new Restaurant("100 montaditos", 22.22, 5);
+        rest2.setActive(false);
+        restaurantRepository.save(rest2);
+
+        // Opción 3: crearlo vacío y actualizarlo con métodos set
+        Restaurant rest3 = new Restaurant();
+        rest3.setName("Rest3");
+        rest3.setAveragePrice(50.22);
+        restaurantRepository.save(rest3);
+
+
+        // Crear un empleado y guardarlo en base datos
+        Employee emp1 = new Employee();
+        employeeRepository.save(emp1);
+
+        Employee emp2 = new Employee("Pepe", "García", 30, "7776645R");
+        employeeRepository.save(emp2);
+
+        System.out.println(emp1);
+        System.out.println(emp2);
+
+        // obtener todos los restaurantes de base de datos
         // SELECT * from restaurantes;
-        List<Restaurante> restaurantes = restauranteRepository.findAll();
-        //System.out.println(restaurantes);
-
-        //for (int i = 0; i < restaurantes.size(); i++) { // size() nos dice el número de elementos en la lista
-        //    System.out.println(restaurantes.get(i));
-        //}
-
-        for (Restaurante restaurante : restaurantes) { // alternativa foreach
-            System.out.println(restaurante);
+        List<Restaurant> restaurantes = restaurantRepository.findAll();
+        // System.out.println(restaurantes);
+//        for (int i = 0; i < restaurantes.size(); i++) { // size() nos dice el número de elementos en la lista
+//            System.out.println(restaurantes.get(i));
+//        }
+        for (Restaurant restaurant : restaurantes) { // bucle foreach itera uno a uno los restaurantes sin crear un index
+            System.out.println(restaurant);
         }
 
-        List<Empleado> empleados = empleadoRepository.findAll();
-        //System.out.println(empleados);
 
-        for (Empleado empleado : empleados) {
+        List<Employee> empleados = employeeRepository.findAll();
+        // System.out.println(empleados);
+        for (Employee empleado : empleados) {
             System.out.println(empleado);
         }
 
-        Restaurante r1 = new Restaurante(10.0, "R1", 5);
-        Restaurante r2 = new Restaurante(15.0, "R2", 7);
+        // saveAll
+        Restaurant r1 = new Restaurant("R1", 10.0, 3);
+        Restaurant r2 = new Restaurant("R2", 15.0, 4);
 
-        // Opción clásica
-        List<Restaurante> sitiosParaComer = new ArrayList<>();
-        List<String> alumnos = new ArrayList<>();
-        List<Double> precios = new ArrayList<>();
+        // opción clásica para crear lista:
+        List<Restaurant> sitiosParaComer = new ArrayList<>(); // crear una lista vacía
+        sitiosParaComer.add(r1); // añadir un restaurante a la lista
+        sitiosParaComer.add(r2); // añadir un restaurante a la lista
+        List<String> alumnos = new ArrayList<>(); // crear una lista vacía
+        List<Double> precios = new ArrayList<>(); // crear una lista vacía
 
-        // Opción moderna
-        List<Restaurante> sitiosGuaposParaComer = List.of(r1, r2);
-        restauranteRepository.saveAll(sitiosGuaposParaComer);
+        // opción moderna para crear lista:
+        List<Restaurant> sitiosGuaposParaComer = List.of(r1, r2);
+        restaurantRepository.saveAll(sitiosGuaposParaComer);
 
-        // count() para contar cuantas filas hay en la tabla
-        long numeroRestaurantes = restauranteRepository.count();
+
+        // count () para contar cuantas filas hay en la tabla devuelve long
+        long numeroRestaurantes = restaurantRepository.count();
         if (numeroRestaurantes > 0) {
-            System.out.println("Hay para comer, tenemos " + numeroRestaurantes + " restaurantes");
+            System.out.println("Hay para comer, todos tranquis, hay " + numeroRestaurantes + " restaurantes");
         } else {
-            System.out.println("No hay para comer");
+            System.out.println("nos morimos de hambre");
         }
 
-        // existById boolean
+        // existById devuelve boolean
         long id = 1;
-        boolean existe = restauranteRepository.existsById(id);
-        if (existe) {
-            System.out.println("Restaurante 1 sí existe");
-        } else {
-            System.out.println("Restaurante 1 no existe");
-        }
-        // restauranteRepository.deleteById(1L);
+        boolean existe = restaurantRepository.existsById(id);
+        if (existe)
+            System.out.println("restaurante 1 sí existe");
+        else
+            System.out.println("restaurante 1 no existe");
+        // restaurantRepository.existsById(2L); // Long ;
+
+
 
         // deleteAll borrar todas las filas de la tabla
-        // restauranteRepository.deleteAll();
+        //restaurantRepository.deleteAll();
 
-        // deleteById borrar una fila indicando si id
-        // restauranteRepository.deleteById(restaurante2.getId());
-        restauranteRepository.deleteById(1L);
 
-        // delete borrar pasando el objeto
-        restauranteRepository.delete(r2);
 
-        // findById traer restaurante/empleado
+        // deleteById borrar una fila indicando su id, 1, 2, 3
+        Long idABorrar = 1L;
+        restaurantRepository.deleteById(idABorrar); // hard coded
+        System.out.println("restaurante con id " + idABorrar + " existe : " + restaurantRepository.existsById(idABorrar));
+        // restaurantRepository.deleteById(rest.getId());
+        // delete, borra pasando el objeto
+        restaurantRepository.delete(r2); // le pasamos un objeto restaurante
+        // restaurantRepository.deleteByName("R1"); // requiere metodo personalizado en el repositorio
+
+
+
+
+
+        // findById traer un restaurante/empleado por su id
         Long idABuscar = 2L;
-        Optional<Restaurante> restauranteFromDatabase = restauranteRepository.findById(idABuscar);
-        if (restauranteFromDatabase.isPresent()) {
-            Restaurante restauranteX = restauranteFromDatabase.get();
-            System.out.println(restauranteX);
+        // Restaurant restaurantFromDatabase = restaurantRepository.findById(idABuscar);
+        Optional<Restaurant> restaurantFromDatabase = restaurantRepository.findById(idABuscar);
+        // var restaurantFromDatabase = restaurantRepository.findById(idABuscar);
+        if (restaurantFromDatabase.isPresent()) {
+            Restaurant restaurante2 = restaurantFromDatabase.get();
+            System.out.println(restaurante2);
         }
 
 
         // Crear un restaurante español
-        Restaurante restEspanol = new Restaurante(20.0, "Casa Pepe", 15);
-        // restEspanol.setTipoComida("Español");
-        restEspanol.setTipoComida(TipoComida.ESP);
-        restauranteRepository.save(restEspanol);
-        System.out.println(restEspanol);
+        Restaurant restaurantSpain = new Restaurant();
+        //restaurantSpain.setFoodType("Español");
+        restaurantSpain.setName("La Taberna");
+        restaurantSpain.setFoodType(FoodType.SPANISH);
+        restaurantSpain.setAveragePrice(4d);
+        restaurantRepository.save(restaurantSpain);
+        System.out.println(restaurantSpain);
 
-        // Crear un restaurante japonés
-        Restaurante restJapones = new Restaurante();
-        restJapones.setTipoComida(TipoComida.JAP);
-        restauranteRepository.save(restJapones);
-        System.out.println(restJapones);
 
-        // Probar a intentar otro tipo de comida y ver que no se puede guardar en base de datos
-        //Restaurante restIndio = new Restaurante();
-        //restIndio.setTipoComida(TipoComida.IND);
+        // crear un restaurante de comida japonesa
+        Restaurant restaurantJapan =  new Restaurant();
+        restaurantJapan.setFoodType(FoodType.JAPANESE);
+        restaurantJapan.setAveragePrice(16d);
+        restaurantJapan.setName("Restaurante Japonés Osaka");
+        restaurantRepository.save(restaurantJapan);
+        System.out.println(restaurantJapan);
 
-        // Probar fecha de startDate del restaurante
-        Restaurante restAsturiano = new Restaurante();
-        restAsturiano.setNombre("Cachopos");
-        restAsturiano.setFechaInicio(LocalDate.now()); // fecha actual
-        restauranteRepository.save(restAsturiano);
-        System.out.println(restAsturiano);
 
-        // Fecha futura
-        Restaurante sidreria = new Restaurante();
-        sidreria.setNombre("Sidrería");
-        sidreria.setFechaInicio(LocalDate.of(2026, 6, 25));
-        restauranteRepository.save(sidreria);
+        // Probar a intentar otro tipo de comida y ver que no deja
+        //Restaurant restaurantItalian =  new Restaurant();
+        //restaurantItalian.setFoodType(FoodType.ITALIAN); // da fallo porque no existe el valor ITALIAN en el enum FoodType
+
+
+        // Probar fecha de startDAte del restuarante
+        Restaurant smashBurguer = new Restaurant();
+        smashBurguer.setName("Smash Burguer Madrid");
+        smashBurguer.setStartDate(LocalDate.now()); // fecha actual
+        smashBurguer.setAveragePrice(18d);
+        restaurantRepository.save(smashBurguer);
+        System.out.println(smashBurguer);
+
+        // fecha futura
+        Restaurant sidreria = new Restaurant();
+        sidreria.setName("Sidreria");
+        sidreria.setStartDate(LocalDate.of(2026, 6, 25));
+        sidreria.setAveragePrice(9d);
+        restaurantRepository.save(sidreria);
         System.out.println(sidreria);
+        // LocalDate solo da año mes y día
+        // LocalTime solo da hora minuto y segundo
+        // LocalDateTime da año mes día hora minuto segundo
 
-        // ManyToOne - asociar un restaurante a dos empleados
-        // Paso 1. crear un restaurante y guardarlo
-        Restaurante hamburgueseriaAsturiana = new Restaurante(15.0, "Hamburguesería Asturiana", 5);
-        restauranteRepository.save(hamburgueseriaAsturiana);
 
-        // Paso 2. crear empleados, setRestaurante y guardar
-        Empleado hamburguesero1 = new Empleado(30, "87654321B", "Pepez", "Pepe", null);
-        Empleado hamburguesero2 = new Empleado(45, "12344321C", "Fernandez", "Fernando", null);
-        hamburguesero1.setRestaurante(hamburgueseriaAsturiana);
-        hamburguesero2.setRestaurante(hamburgueseriaAsturiana);
-        empleadoRepository.save(hamburguesero1);
-        empleadoRepository.save(hamburguesero2);
-        System.out.println(hamburguesero1);
-        System.out.println(hamburguesero2);
+        // MANY TO ONE - ASOCIAR UN RESTAURANTE A DOS EMPLEADOS
+        // Paso 1. crear restaurante y guardarlo
+        Restaurant dominosPizza = new Restaurant();
+        dominosPizza.setName("DominosPizza");
+        dominosPizza.setFoodType(FoodType.SPANISH); // ponemos SPANISH para la prueba, aunque no lo sea
+        restaurantRepository.save(dominosPizza);
+        // paso 2. crear empleados, setRestaurant y guardar
+        Employee juanito = new Employee();
+        juanito.setFirstName("Juanito");
+        juanito.setRestaurant(dominosPizza);
+        juanito.setAge(18); // NO cumple el filtro de findByAgeGreaterThanEqual
+        employeeRepository.save(juanito);
+        System.out.println(juanito); // imprime el id del restaurante en el toSTring
+        Employee patricia = new Employee();
+        patricia.setFirstName("patricia");
+        patricia.setRestaurant(dominosPizza);
+        patricia.setAge(35); // SÍ cumple el filtro de findByAgeGreaterThanEqual
+        employeeRepository.save(patricia);
+        System.out.println(patricia);
+        // Bucle for para iterar sobre todos los empleados imprimiendo el nombre del empleado y el nombre de su restaurante
+        // si lo tiene
+        List<Employee> trabajadores = employeeRepository.findAll();
+        for (Employee trabajador : trabajadores) {
+//            System.out.println(
+//                    trabajador.getFirstName() +
+//                    " trabaja en " +
+//                    (trabajador.getRestaurant() != null ? trabajador.getRestaurant().getName() : "ningún sitio"));
 
-        // Bucle for para iterar sobre todos los empleados imprimiendo el nombre del empleado
-        // y el nombre del restaurante si lo tiene
-        for (Empleado empleado : empleadoRepository.findAll()) {
-            System.out.println("Empleado: " + empleado.getNombre());
-            if (empleado.getRestaurante() != null) {
-                System.out.println("Trabaja en el restaurante: " + empleado.getRestaurante().getNombre());
+            if (trabajador.getRestaurant() != null)  {
+                System.out.println(trabajador.getFirstName() + " trabaja en " + trabajador.getRestaurant().getName());
             } else {
-                System.out.println("No tiene restaurante asignado");
+                System.out.println(trabajador.getFirstName() + " trabaja en ningún sitio");
             }
         }
+        // probar a filtrar por nombre de restaurante
+        List<Employee> empleadosDominos = employeeRepository.findByRestaurantName("DominosPizza");
+        System.out.println(empleadosDominos);
 
-        //for (Empleado empleado : empleadoRepository.findAll()) {
-        //    System.out.println(
-        //            empleado.getNombre() + " trabaja en " +
-        //            (empleado.getRestaurante() != null ? empleado.getRestaurante().getNombre() : "ningún sitio")
-        //    );
-        //}
+        System.out.println("FILTRAR EMPLEADOS POR TIPO DE COMIDA DE RESTAURANTE:");
+        for (var e : employeeRepository.findByRestaurant_FoodType(FoodType.SPANISH))
+            System.out.println(e);
 
-        // Probar a filtrar
-        System.out.println("PRUEBAS DE FILTROS");
-        List<Empleado> empleadosHambAst = empleadoRepository.findByRestaurante_Nombre("Hamburguesería Asturiana");
-        List<Empleado> empleadosMayor20 = empleadoRepository.findByEdadGreaterThanEqual(20);
-        List<Empleado> empleadosComidaEsp = empleadoRepository.findByRestaurante_TipoComida(TipoComida.ESP);
-        List<Empleado> empleadosApellidoDesc = empleadoRepository.descOrderByApellido();
+        System.out.println("FILTRAR EMPLEADOS POR EDAD MAYOR O IGUAL QUE");
+        for (var e : employeeRepository.findByAgeGreaterThanEqual(20))
+            System.out.println(e);
 
-        System.out.println("EMPLEADOS HAMBURGUESERÍA ASTURIANA");
-        for (Empleado empleado : empleadosHambAst) {
-            System.out.println(empleado);
-        }
-        System.out.println("EMPLEADOS MAYORES DE 20 AÑOS");
-        for (Empleado empleado : empleadosMayor20) {
-            System.out.println(empleado);
-        }
-        System.out.println("EMPLEADOS DE RESTAURANTES DE COMIDA ESPAÑOLA");
-        for (Empleado empleado : empleadosComidaEsp) {
-            System.out.println(empleado);
-        }
-        System.out.println("EMPLEADOS ORDENADOS POR APELLIDO DESCENDENTE");
-        for (Empleado empleado : empleadosApellidoDesc) {
-            System.out.println(empleado);
-        }
+        System.out.println("TRAER TODOS LOS EMPLEADOS ORDENADOS POR NOMBRE ASCENDENTE A-Z");
+        for (var e : employeeRepository.findByOrderByFirstNameAsc())
+            System.out.println(e);
 
-        // Clases con la clase Plato
-        PlatoRepository platoRepository = context.getBean(PlatoRepository.class);
+        String nombre = "Alan"; // string normal
+        // Text block, string con triple comilla para tener varias líneas, ideal para queries largas en repositorios
+        String descripcionLarga = """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                """;
 
-        Plato cachopo = new Plato();
-        cachopo.setNombre("Cachopo Asturiano");
-        cachopo.setDescripcion("Cachopo con jamón y queso");
-        cachopo.setPrecio(15.0);
-        cachopo.setTipoPlato(TipoPlato.PRIMER_PLATO);
-        cachopo.setRestaurante(restAsturiano);
-        platoRepository.save(cachopo);
+        // CREAR PLATOS Y GUARDARLOS
+        Dish plato1 = new Dish(null, "Ensalada", "de puñetazos", 5.0, DishType.STARTER, restaurantSpain);
+        Dish plato2 = new Dish(null, "Lentejas", "con chorizo", 8.0, DishType.MAIN, restaurantSpain);
+        Dish plato3 = new Dish(null, "Tarta de queso", null, 7.50, DishType.DESSERT, restaurantSpain);
+        Dish plato4 = new Dish(null, "Champán", null, 60.0, DishType.DESSERT, restaurantSpain);
+        dishRepository.saveAll(List.of(plato1, plato2, plato3, plato4));
 
-        Plato fabada = new Plato();
-        fabada.setNombre("Fabada Asturiana");
-        fabada.setDescripcion("Fabada asturiana con chorizo y morcilla");
-        fabada.setPrecio(12.0);
-        fabada.setTipoPlato(TipoPlato.PRIMER_PLATO);
-        fabada.setRestaurante(restAsturiano);
-        platoRepository.save(fabada);
-
-        Plato casadielles = new Plato();
-        casadielles.setNombre("Casadielles");
-        casadielles.setDescripcion("Casadielles asturianas con nueces y azúcar");
-        casadielles.setPrecio(8.0);
-        casadielles.setTipoPlato(TipoPlato.POSTRE);
-        casadielles.setRestaurante(restAsturiano);
-        platoRepository.save(casadielles);
-
-        List<Plato> platoTipo = platoRepository.findByTipoPlato(TipoPlato.PRIMER_PLATO);
-
-        System.out.println("PLATOS PRINCIPALES DE LA CARTA");
-        for (Plato plato : platoTipo) {
+        // OPcion  1: crear consultas personalizadas en DishRepository
+        // que traiga los platos con precio menor que 10 euros findAllByPrice...
+        for (var plato: dishRepository.findByPriceLessThanEqual(7.99))
             System.out.println(plato);
-        }
+        // que traiga los platos de un restaurante ordenados por precio ascendente findAllBy
+        // que traiga aquellos platos que no contengan alergenos
 
-        // Opción 1: crear consultas personalizadas en PlatoRepository
-        // que traiga los platos con precio menor que 10 euros (findAllByPrecio)
-        List<Plato> platoMenor10 = platoRepository.findByPrecioLessThanEqual(10.0);
 
-        System.out.println("PLATOS CON PRECIO MENOR O IGUAL A 10 EUROS");
-        for (Plato plato : platoMenor10) {
+        System.out.println("TRAER PLATOS DE UN RESTAURANTE ORDENADOS POR PRECIO ASCENDENTE:");
+        Long restaurantId = restaurantSpain.getId();
+        for (var plato: dishRepository.findByRestaurantIdOrderByPrice(restaurantId))
             System.out.println(plato);
+
+
+        // Crear pedido
+        Order pedido1 = new Order();
+        pedido1.setNumPeople(2);
+        pedido1.setTableNumber(1);
+        pedido1.setRestaurant(restaurantSpain);
+        pedido1.setTip(2.33);
+        //pedido1.setDate(LocalDateTime.now());
+        orderRepository.save(pedido1);
+//        Order pedido2 = new Order(4.23, 2, 4, restaurantSpain);
+//        orderRepository.save(pedido2);
+
+        // crear 6 lineas de pedido, una para cada Order.
+        // OrderLine .... (cantidad, pedido, plato)
+        OrderLine unaEnsalada = new OrderLine(1, pedido1, plato1); // una ensalada
+        OrderLine dosLentejas = new OrderLine(2, pedido1, plato2); // dos platos de lentejas
+        OrderLine dosTartas = new OrderLine(2, pedido1, plato3); // dos tartas de queso
+
+        List<OrderLine> lineasPedido = orderLineRepository.saveAll(List.of(unaEnsalada, dosLentejas, dosTartas));
+
+        // calcular precio total en java:
+        double totalPrice = 0.0;
+        for (OrderLine lineaPedido : lineasPedido) {
+            // sacar el precio del plato
+            double precioLinea = lineaPedido.getDish().getPrice() * lineaPedido.getQuantity();
+            totalPrice += precioLinea;
         }
 
-        // que traiga los platos de un restaurante ordenados por precio ascendente (findAllBy)
-        //List<Plato> platoPrecioAsc = platoRepository.ascOrderByPrecio();
-        List<Plato> platoPrecioAsc = platoRepository.findByRestauranteIdOrderByPrecio(restAsturiano.getId());
+        // guardar el totalPrice en base de datos:
+        pedido1.setTotalPrice(totalPrice);
+        pedido1.setStatus(OrderStatus.FINISHED); // marcamos el pedido como completado
+        orderRepository.save(pedido1); // actualizar el totalPrice del pedido para saber cuanto dinerito hemos ganado
 
-        System.out.println("PLATOS ORDENADOS POR PRECIO ASCENDENTE");
-        for (Plato plato : platoPrecioAsc) {
-            System.out.println(plato);
-        }
-
-        //Long restaurantId = restAsturiano.getId();
-        //for (var plato: platoRepository.findByRestauranteIdOrderByPrecio(restaurantId))
-        //    System.out.println(plato);
-
-        // que traiga aquellos platos que no contenga alergenos
-        List<Plato> platoAlergeno = platoRepository.findByAlergenoIn(List.of(Alergeno.APIO, Alergeno.CRUSTACEOS));
-
-        System.out.println("PLATOS SIN ALERGENOS");
-        for (Plato plato : platoAlergeno) {
-            System.out.println(plato);
-        }
-
-        // Opción 2: crear un pedido
-        PedidoRepository pedidoRepository = context.getBean(PedidoRepository.class);
-
-        Pedido pedido1 = new Pedido();
-        pedido1.setNumeroComensales(2);
-        pedido1.setNumeroMesa(5);
-        pedido1.setPropina(5.0);
-        pedido1.setRestaurante(restAsturiano);
-        pedidoRepository.save(pedido1);
-
-        // Crear 6 líneas de pedido, una para cada pedido
-        LineaPedidoRepository lineaPedidoRepository = context.getBean(LineaPedidoRepository.class);
-
-        LineaPedido unCachopo =  new LineaPedido(pedido1, cachopo, 1);
-        LineaPedido dosFabadas =  new LineaPedido(pedido1, fabada, 2);
-        LineaPedido dosCasadielles =  new LineaPedido(pedido1, casadielles, 2);
-
-        List<LineaPedido> lineasPedido = lineaPedidoRepository.saveAll(List.of(unCachopo, dosFabadas, dosCasadielles));
-
-        // Calcular precio total en Java
-        double precioTotal = 0.0;
-        for (LineaPedido lineaPedido : lineasPedido) {
-            double precioLinea = lineaPedido.getPlato().getPrecio() * lineaPedido.getCantidad();
-            //precioTotal = precioTotal + precioLinea;
-            precioTotal += precioLinea;
-        }
-
-        // Guardar el precioTotal en base de datos
-        pedido1.setPrecioTotal(precioTotal);
-        pedido1.setEstadoPedido(EstadoPedido.SERVIDO); // marcamos el pedido como completado
-        pedidoRepository.save(pedido1);
-
-        // Calcular precio total directamente en base de datos con una Query
-        Double precioTotal2 = lineaPedidoRepository.calcularPrecioTotal(pedido1.getId()); // JPQL
+        // calcular precio total directamente en base de datos con una query
+        Double totalPrice2 = orderLineRepository.calculateTotalPrice(pedido1.getId()); // JPQL
         /*
         Ambos precios son el mismo
         El primero totalPrice, se calcula desde java con un bucle for
         El segundo totalPrice2, se calcula directamente en base de datos por lo que sería más óptimo
          */
-        System.out.println("Precio totalPrice: " + precioTotal);
-        System.out.println("Precio totalPrice2: " + precioTotal2);
+        System.out.println("Precio totalPrice: " + totalPrice);
+        System.out.println("Precio totalPrice2: " + totalPrice2);
 
-        // Crear tres reseñas usando @Builder
-        ResenaRepository resenaRepository = context.getBean(ResenaRepository.class);
-        Resena resena1 =Resena.builder()
-                .descripcion("Te atienden bien y en asturiano")
-                .restaurante(hamburgueseriaAsturiana)
-                .titulo("Restaurante espectacular")
-                .clasificacion(5)
-                .build();
-        Resena resena2 =Resena.builder()
-                .titulo("Horrible")
-                .restaurante(restaurante2)
-                .descripcion("No te atienden en asturiano")
-                .clasificacion(1)
-                .build();
-        Resena resena3 =Resena.builder()
-                .titulo("Más o menos")
-                .restaurante(restEspanol)
-                .descripcion("Se sabían algunas palabras en asturiano")
-                .clasificacion(3)
+
+
+        // crear cuatro reviews de un restaurante usando Builder de lombok
+        Review review1 = Review.builder()
+                .description("Te atienden bien")
+                .restaurant(restaurantSpain)
+                .title("Restaurante espectacular")
+                .rating(5)
                 .build();
 
-        Resena resena4 = Resena.builder()
-                .descripcion("Ni fu ni fa")
-                .plato(cachopo)
-                .titulo("Me pusieron de menos")
-                .clasificacion(2)
+        Review review2 = Review.builder()
+                .description("Nefasto")
+                .restaurant(restaurantSpain)
+                .title("Me sirvieron la sopa sin mosca")
+                .rating(1)
                 .build();
 
-        Resena resena5 = Resena.builder()
-                .descripcion("Excelente")
-                .plato(fabada)
-                .titulo("Guay")
-                .clasificacion(5)
+        Review review3 = Review.builder()
+                .description("Ni fu ni fa")
+                .restaurant(restaurantSpain)
+                .title("Comí y no me morí")
+                .rating(3)
                 .build();
 
-        resenaRepository.saveAll(List.of(resena1, resena2, resena3, resena4, resena5));
+
+        Review review4 = Review.builder()
+                .description("Ni fu ni fa")
+                .dish(plato1)
+                .title("Me pusieron de menos")
+                .rating(2)
+                .build();
+
+        Review review5 = Review.builder()
+                .description("Excelente")
+                .dish(plato1)
+                .title("Guay")
+                .rating(5)
+                .build();
+
+        reviewRepository.saveAll(List.of(review1, review2, review3, review4,  review5));
+        // resumen
+        // findAll
+        // findById
+        // existById
+        // count()
+
+        // save()
+        // saveAll()
+
+        // deleteById
+        // deleteALl
+
+
     }
 
 }
+
+
+
+
+
+
+

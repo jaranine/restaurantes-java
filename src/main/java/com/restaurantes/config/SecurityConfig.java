@@ -4,64 +4,63 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
+    // passwordEncoder para cifrar contraseñas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // securityFilterChain para proteger acceso a rutas
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+
+        http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())); // h2 usa iframes
+
         http.authorizeHttpRequests(
                 auth -> auth
-                        // rutas publicas tanto GET como POST
-                        .requestMatchers("/hola", "/adios", "/login",
-                                "/register", "/css/**", "/images/**", "/webjars/**").permitAll()
+                // ORDEN IMPORTANTE
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/hola", "/adios", "/login", "/register", "/css/**", "/images/**", "/webjars/**").permitAll()
 
-                        // de golpe:
-//                .requestMatchers(HttpMethod.GET, "/restaurants", "/restaurants/*", "/dishes", "/dishes/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/restaurants").permitAll()
+                .requestMatchers(HttpMethod.POST, "/restaurants").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/restaurants/deactivate/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/restaurants/new").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/restaurants/edit/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/restaurants/*").permitAll()
 
-                        // separado de una en una
-                        .requestMatchers(HttpMethod.GET, "/restaurantes").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/restaurantes/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/restaurantes").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/restaurantes/deactivar/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/restaurantes/nuevo").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/restaurantes/editar/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/dishes").permitAll()
+                .requestMatchers(HttpMethod.POST, "/dishes").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/dishes/new").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/dishes/edit/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/dishes/*").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/platos").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/platos/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/platos").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/platos/nuevo").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/platos/editar/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/reviews").permitAll()
+                .requestMatchers(HttpMethod.POST, "/reviews").authenticated()
+                .requestMatchers(HttpMethod.GET, "/reviews/new").authenticated()
+                .requestMatchers(HttpMethod.GET, "/reviews/edit/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/reviews/disable/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/reviews/delete/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/reviews/*").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/resenas").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/resenas/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/resenas").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/resenas/nuevo").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/resenas/editar/*").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/resenas/desactivar/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/resenas/borrar/*").hasRole("ADMIN")
-
-                        // solo user normal, no admin
-//                .requestMatchers(HttpMethod.GET, "/orders").hasRole("USER")
-//                .requestMatchers(HttpMethod.GET, "/orders/new").hasRole("USER")
-//                .requestMatchers(HttpMethod.POST, "/orders/**").hasRole("USER")
-                        // todos los roles
-                        .requestMatchers("/pedidos", "/pedidos/**").authenticated()
-
-                        // lo demás autenticado si o si
-                        .anyRequest().authenticated()
+                .requestMatchers("/orders", "/orders/**").authenticated()
+                .anyRequest().authenticated()
         );
 
         http.formLogin(form ->
                 form.loginPage("/login")
-                        .defaultSuccessUrl("/restaurantes", true)
-                        .permitAll()
+                .defaultSuccessUrl("/restaurants", true)
+                .permitAll()
         );
 
         return http.build();

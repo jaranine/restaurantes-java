@@ -10,18 +10,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
+@Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -31,9 +32,6 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
-
-//    @Column(unique = true, nullable = false)
-//    private String confirmPassword;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
